@@ -1,6 +1,6 @@
 # ClusterBootstrap
 
-ClusterBootstrap is an R package that provides functionality for performing (generalized) linear mixed models for the analysis of clustered data. You can download it from github with \code{devtools}:
+ClusterBootstrap is an R package that provides functionality for performing (generalized) linear mixed models for the analysis of clustered data. You can download it from github with `devtools`:
 
 ```{R}
 #install.packages("devtools")

@@ -2,9 +2,7 @@
 % Please edit documentation in R/clusbootglm.R
 \name{clusbootglm}
 \alias{clusbootglm}
-\title{Fit (generalized) linear models with the cluster bootstrap
- 
-Perform a (generalized) linear model with the cluster bootstrap for analysis of clustered data.}
+\title{Fit (generalized) linear models with the cluster bootstrap}
 \usage{
 clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
   confint.level = 0.95, no_cores = 1)
@@ -36,8 +34,6 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 \item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined confidence interval level.}
 }
 \description{
-Fit (generalized) linear models with the cluster bootstrap
- 
 Perform a (generalized) linear model with the cluster bootstrap for analysis of clustered data.
 }
 \details{

@@ -1,0 +1,19 @@
+Package: ClusterBootstrap
+Title: Analyze Clustered Data with (Generalized) Linear Models using the Cluster Bootstrap
+Version: 0.9.1
+Authors@R: c(person(given = "Mathijs", family = "Deen",
+                    role  = c("aut", "cre"),
+                    email = "m.l.deen@fsw.leidenuniv.nl"),
+             person(given = "Mark", family = "de Rooij",
+                    role = "aut"))
+Description: The ClusterBootstrap package provides functionality for the
+    analysis of clustered data, using the cluster bootstrap.
+Depends:
+    R (>= 3.0),
+    stats,
+    utils,
+    graphics,
+    parallel
+License: GPL (>= 2)
+LazyData: true
+RoxygenNote: 6.0.1

@@ -40,8 +40,8 @@ summary.clusboot<-function(object,interval.type="BCa",...){
   print(model$Call)
   cat(sprintf("\n"))
   ifelse(interval.type=="BCa", confinttab <- model$BCa.interval, ifelse(interval.type=="parametric", confinttab <- model$parametric.interval, confinttab <- model$percentile.interval))
-  tabel <- cbind(model$lm.coefs,model$boot.coefs,model$sd,confinttab)
-  dimnames(tabel)[[2]]<-c('Estimates (OLS)','Estimates (bootstrap)','St.dev',sprintf('CI %.1f%%',100*ci.boundaries[1]),sprintf('CI %.1f%%',100*ci.boundaries[2]))
+  tabel <- cbind(model$lm.coefs,model$boot.coefs,model$boot.sds,confinttab)
+  dimnames(tabel)[[2]]<-c('Estimates (GLM)','Estimates (bootstrap)','St.dev',sprintf('CI %.1f%%',100*ci.boundaries[1]),sprintf('CI %.1f%%',100*ci.boundaries[2]))
   print(tabel)
   cat(sprintf("---\n"))
   cat(paste(100*model$ci.level,"% confidence interval using ", ifelse(interval.type=="BCa", "bias corrected and accelerated", ifelse(interval.type=="parametric", "parametric", "percentile")), " cluster bootstrap intervals", sep=""))
@@ -49,7 +49,7 @@ summary.clusboot<-function(object,interval.type="BCa",...){
 
 #' Obtain coefficients from cluster bootstrap object
 #' @param object cluster bootstrap model.
-#' @param type type of coefficient (bootstrap of OLS).
+#' @param type type of coefficient (bootstrap of GLM).
 #' @param ... other arguments.
 #' @examples \dontrun{
 #' data(opposites)
@@ -62,11 +62,11 @@ coef.clusboot<-function(object,type="bootstrap",...){
   if(type=="bootstrap"){
     tabel <- cbind(model$boot.coefs)
     colnames(tabel)<-'bootstrap'
-  } else if(type=="OLS"){
+  } else if(type=="GLM"){
     tabel <- cbind(model$lm.coefs)
-    colnames(tabel)<-"OLS"
+    colnames(tabel)<-"GLM"
   } else {
-    stop("type must be 'bootstrap' or 'OLS'",call.=FALSE)
+    stop("type must be 'bootstrap' or 'GLM'",call.=FALSE)
   }
   rownames(tabel)<-rownames(model$parametric.interval)
   tabel

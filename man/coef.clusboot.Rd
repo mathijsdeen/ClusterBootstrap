@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{cluster bootstrap model.}
 
-\item{type}{type of coefficient (bootstrap of OLS).}
+\item{type}{type of coefficient (bootstrap of GLM).}
 
 \item{...}{other arguments.}
 }

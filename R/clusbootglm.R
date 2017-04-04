@@ -1,5 +1,5 @@
 #' Fit (generalized) linear models with the cluster bootstrap
-#'  
+#'
 #' Perform a (generalized) linear model with the cluster bootstrap for analysis of clustered data.
 #' @param model (generalized) linear model to be fitted with the cluster bootstrap.
 #' @param data dataframe that contains the data.

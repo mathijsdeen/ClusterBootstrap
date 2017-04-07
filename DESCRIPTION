@@ -17,6 +17,6 @@ Depends:
     parallel
 License: GPL-3 | file LICENSE
 URL: https://github.com/mathijsdeen/ClusterBootstrap
-BugReport: https://github.com/mathijsdeen/ClusterBootstrap/issues
+BugReport: https://github.com/mathijsdeen/ClusterBootstrap/issues/
 LazyData: true
 RoxygenNote: 6.0.1

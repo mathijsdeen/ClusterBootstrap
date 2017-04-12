@@ -3,9 +3,6 @@ Title: Analyze Clustered Data with (Generalized) Linear Models using the Cluster
 Date: 2017-04-04
 <<<<<<< HEAD
 Version: 0.9.1.2b
-=======
-Version: 0.9.1.2_dev
->>>>>>> c09bf1546854970c1aa540cb61094ece89324d97
 Authors@R: c(person(given = "Mathijs", family = "Deen",
                     role  = c("aut", "cre"),
                     email = "m.l.deen@fsw.leidenuniv.nl"),

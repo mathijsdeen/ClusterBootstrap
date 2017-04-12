@@ -27,6 +27,7 @@
 #' @import utils
 #' @export
 clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.level=.95,no_cores=1) {
+  print("This is a development version of ClusterBootstrap.")
   if(is.numeric(no_cores) & no_cores > 0){
     if(no_cores==1) result <- clusbootglm_serial(model, data, clusterid, family, B) 
     if(no_cores>1) result <- clusbootglm_parallel(model, data, clusterid, family, B, confint.level,no_cores)

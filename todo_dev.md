@@ -5,6 +5,7 @@
 * write up clusbootmatrix for return of clusbootmatrix (either full, failures or specified columns)
 * write up function for returning data corresponding a specific bootstrap sample
 
+Here's a possibility for clusbootmatrix()
 ```r
 clusbootmatrix <- function(object, type="all"){
   objname <- match.call()$object
@@ -15,6 +16,8 @@ clusbootmatrix <- function(object, type="all"){
     out <- with(object, bootstrap.matrix[,failed.bootstrap.samples])
   }else if(is.numeric(type)){
     out <- with(object, bootstrap.matrix[,type])
+  }else{
+    stop("type should be \"all\", \"failed\" or numeric", call.=F)
   }
   return(out)
 }

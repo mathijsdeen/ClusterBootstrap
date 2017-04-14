@@ -25,6 +25,7 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 \value{
 \code{clusbootglm} produces an object of class \code{"clusboot"}, containing the following relevant components:
 \item{coefficients}{A matrix of \code{B} rows, containing the parameter estimates for all bootstrap samples.}
+\item{bootstrap.matrix}{Returns the n*B matrix, of which each column represents a bootstrap sample; each value in a column represents a unit of \code{subjectid}}
 \item{lm.coefs}{Parameter estimates from a single (generalized) linear model.}
 \item{boot.coefs}{Mean values of the paramater estimates, derived from the bootstrap coefficients.}
 \item{boot.sds}{Standard deviations of cluster bootstrap parameter estimates.}
@@ -32,6 +33,7 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 \item{percentile.interval}{Confidence interval based on percentiles, given the user defined confidence interval level.}
 \item{parametric.interval}{Confidence interval based on \code{lm.coefs} and column standard deviations of \code{coefficients}, given the user defined confidence interval level.}
 \item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined confidence interval level.}
+\item{failed.bootstrap.samples}{When there are bootstrap samples that returned errors (e.g., convergence errors), their sample numbers are listed here.}
 }
 \description{
 Perform a (generalized) linear model with the cluster bootstrap for analysis of clustered data.

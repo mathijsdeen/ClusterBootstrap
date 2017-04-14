@@ -45,6 +45,10 @@ summary.clusboot<-function(object,interval.type="BCa",...){
   print(tabel)
   cat(sprintf("---\n"))
   cat(paste(100*model$ci.level,"% confidence interval using ", ifelse(interval.type=="BCa", "bias corrected and accelerated", ifelse(interval.type=="parametric", "parametric", "percentile")), " cluster bootstrap intervals", sep=""))
+  failed.samples.n <- length(model$failed.bootstrap.samples)
+  if(failed.samples.n>0){
+    cat(sprintf("\nThere were %d bootstrap samples which returned NA's", failed.samples.n))
+  }
 }
 
 #' Obtain coefficients from cluster bootstrap object

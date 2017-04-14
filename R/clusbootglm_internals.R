@@ -31,11 +31,20 @@ cbglm.signif.check<-function(ci_row){
   else return(0)
 }
 
-clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data){
+clusbootglm_sample_glm_old <-function(f, i, Obsno, model, family, data){
+  #deprecated function, will be deleted
   j <- f[, i]
   obs <- unlist(Obsno[j])
   try(bootrep <- glm(model, family = family, data = data[obs,]))
   return(bootrep$coef)
+}
+
+clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data){
+  j <- f[, i]
+  obs <- unlist(Obsno[j])
+  bootcoef <- tryCatch(coef(glm(model, family = family, data = data[obs,])),
+                      warning=function(x) rep(as.numeric(NA),length(coef(glm(model,family=binomial, data=data[obs,])))))
+  return(bootcoef)
 }
 
 clusjackglm <- function (model, data, clusterid, family = gaussian, B = 5000, verbose=F) {

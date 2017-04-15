@@ -20,7 +20,7 @@ clusbootmatrix <- function(object, whichsample="all"){
       stop("whichsample should be \"all\", \"failed\" or numeric", call.=F)
     }
   }else{
-    out <- with(object, bootstrap.matrix[,type])
+    out <- with(object, bootstrap.matrix[,whichsample])
   }
   return(out)
 }

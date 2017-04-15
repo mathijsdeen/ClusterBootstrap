@@ -47,7 +47,6 @@ clusbootglm_parallel <- function(model, data, clusterid, family, B, confint.leve
   coefs <- matrix(NA, nrow = B, ncol = p)
   cluster <- as.character(clusterid)
   clusters <- unique(cluster)
-  nc <- length(clusters)
   Obsno <- split(1:n, cluster)
   f <- matrix(clusters, length(clusters), B)
   ff <- matrix(f, prod(dim(f)), 1)
@@ -77,7 +76,7 @@ clusbootglm_parallel <- function(model, data, clusterid, family, B, confint.leve
   }
   rownames(ci_percentile) <- rownames(ci_BCa) <- dimnames(ci_parametric)[[1]]
   RNGkind(previous_RNGkind)
-  result <- list(coefficients = coefs, bootstrap.matrix = f, lm.coefs = res.or$coef, 
+  result <- list(coefficients = coefs, data = data, bootstrap.matrix = f, subject.vector = clusterid, lm.coefs = res.or$coef, 
                  boot.coefs = colMeans(coefs, na.rm = TRUE), boot.sds = sdcoefs, ci.level = confint.level,
                  percentile.interval = ci_percentile, parametric.interval = ci_parametric, 
                  BCa.interval = ci_BCa, failed.bootstrap.samples = failed.samples)
@@ -96,7 +95,6 @@ clusbootglm_serial <- function (model, data, clusterid, family = gaussian, B = 5
   coefs <- matrix(NA, nrow = B, ncol = p)
   cluster <- as.character(clusterid)
   clusters <- unique(cluster)
-  nc <- length(clusters)
   Obsno <- split(1:n, cluster)
   f = matrix(clusters,length(clusters),B)
   ff = matrix(f,prod(dim(f)),1)
@@ -124,7 +122,7 @@ clusbootglm_serial <- function (model, data, clusterid, family = gaussian, B = 5
     ci_BCa[i,]<-sort(BCa.coefs[,i])[ooo]
   }
   rownames(ci_percentile) <- rownames(ci_BCa) <- dimnames(ci_parametric)[[1]]
-  result <- list(coefficients = coefs, bootstrap.matrix = f, lm.coefs = res.or$coef, 
+  result <- list(coefficients = coefs, data = data, bootstrap.matrix = f, subject.vector = clusterid, lm.coefs = res.or$coef, 
                  boot.coefs = colMeans(coefs, na.rm = TRUE), boot.sds = sdcoefs, ci.level = confint.level,
                  percentile.interval = ci_percentile, parametric.interval = ci_parametric, 
                  BCa.interval = ci_BCa, failed.bootstrap.samples = failed.samples)

@@ -87,9 +87,9 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   }
   #results:
   rownames(ci_percentile) <- rownames(ci_BCa) <- dimnames(ci_parametric)[[1]]
-  result <- list(call = match.call(), coefficients = coefs, data = data, bootstrap.matrix = f, subject.vector = clusterid, lm.coefs = res.or$coef, 
-                 boot.coefs = colMeans(coefs, na.rm = TRUE), boot.sds = sdcoefs, ci.level = confint.level,
-                 percentile.interval = ci_percentile, parametric.interval = ci_parametric, 
+  result <- list(call = match.call(), coefficients = coefs, data = data, bootstrap.matrix = f, subject.vector = clusterid, 
+                 lm.coefs = res.or$coef, boot.coefs = colMeans(coefs, na.rm = TRUE), boot.sds = sdcoefs, 
+                 ci.level = confint.level, percentile.interval = ci_percentile, parametric.interval = ci_parametric, 
                  BCa.interval = ci_BCa, failed.bootstrap.samples = failed.samples)
   class(result) <- "clusboot"
   return(result)

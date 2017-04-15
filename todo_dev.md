@@ -1,5 +1,4 @@
 # to do list in the dev branch
 
-* integrate clusbootglm_parallel and clusbootglm_serial into one function. Less clutter.
-* re-enstate call formula after first bullet
-
+* rename class `clusboot` to `clusbootglm` 
+* try to silence some of the printed return values

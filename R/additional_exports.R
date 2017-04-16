@@ -1,7 +1,8 @@
 #' @title Extract matrix with bootstrap samples
 #' @description Obtain a matrix containing the \code{clusterid} values for the bootstrap samples in a \code{clusbootglm} object.
 #' @param object object of class \code{clusbootglm}, created with the \code{clusbootglm} function.
-#' @param whichsample "all" for the complete bootstrap matrix, "failed" for bootstrap samples that returned NAs, or a vector of values for specific bootstrap samples.
+#' @param whichsample which bootstrap sample(s) should be returned. Choose "all" for the complete bootstrap matrix, 
+#'        "failed" for bootstrap samples that returned NAs, or a vector of values for specific bootstrap samples.
 #' @examples \dontrun{
 #' data(opposites)
 #' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
@@ -17,7 +18,7 @@ clusbootmatrix <- function(object, whichsample="all"){
     }else if(whichsample=="failed"){
       out <- with(object, bootstrap.matrix[,failed.bootstrap.samples])
     }else{
-      stop("whichsample should be \"all\", \"failed\" or numeric", call.=F)
+      stop("\"whichsample\" should be \"all\", \"failed\" or numeric", call.=F)
     }
   }else{
     out <- with(object, bootstrap.matrix[,whichsample])
@@ -25,15 +26,15 @@ clusbootmatrix <- function(object, whichsample="all"){
   return(out)
 }
 
-#' @title Create data for specified bootstrap sample
-#' @description Returns the full data frame for a specified bootstrap sample
+#' @title Return data for specified bootstrap sample
+#' @description Returns the full data frame for a specified bootstrap sample in a \code{clusbootglm} object.
 #' @param object object of class \code{clusbootglm}, created with the \code{clusbootglm} function.
-#' @param samplenr sample number for which the data frame should be created
+#' @param samplenr sample number for which the data frame should be returned.
 #' @examples \dontrun{
 #' data(opposites)
 #' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
 #' clusbootsample(cbglm.1, samplenr=1)}
-#' @author Mathijs Deen, Mark de Rooij
+#' @author Mark de Rooij, Mathijs Deen
 #' @export
 clusbootsample <- function(object, samplenr){
   objname <- match.call()$object

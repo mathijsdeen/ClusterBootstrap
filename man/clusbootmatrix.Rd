@@ -9,7 +9,8 @@ clusbootmatrix(object, whichsample = "all")
 \arguments{
 \item{object}{object of class \code{clusbootglm}, created with the \code{clusbootglm} function.}
 
-\item{whichsample}{"all" for the complete bootstrap matrix, "failed" for bootstrap samples that returned NAs, or a vector of values for specific bootstrap samples.}
+\item{whichsample}{which bootstrap sample(s) should be returned. Choose "all" for the complete bootstrap matrix, 
+"failed" for bootstrap samples that returned NAs, or a vector of values for specific bootstrap samples.}
 }
 \description{
 Obtain a matrix containing the \code{clusterid} values for the bootstrap samples in a \code{clusbootglm} object.

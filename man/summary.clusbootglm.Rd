@@ -7,14 +7,14 @@
 \method{summary}{clusbootglm}(object, interval.type = "BCa", ...)
 }
 \arguments{
-\item{object}{cluster bootstrap object.}
+\item{object}{object of class \code{clusbootglm}.}
 
 \item{interval.type}{which confidence interval should be used. Options are \code{parametric}, \code{percentile} and \code{BCa} intervals.}
 
 \item{...}{other arguments.}
 }
 \description{
-Summarize cluster bootstrap output
+Returns the summary of an object of class \code{clusbootglm}
 }
 \examples{
 \dontrun{

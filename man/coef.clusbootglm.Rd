@@ -7,14 +7,14 @@
 \method{coef}{clusbootglm}(object, type = "bootstrap", ...)
 }
 \arguments{
-\item{object}{cluster bootstrap model.}
+\item{object}{object of class \code{clusbootglm}.}
 
-\item{type}{type of coefficient (bootstrap of GLM).}
+\item{type}{type of coefficient (\code{bootstrap} or \code{GLM}).}
 
 \item{...}{other arguments.}
 }
 \description{
-Obtain coefficients from cluster bootstrap object
+Returns the coefficients of an object of class \code{clusbootglm}.
 }
 \examples{
 \dontrun{

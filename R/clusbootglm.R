@@ -1,5 +1,5 @@
 #' @title Fit generalized linear models with the cluster bootstrap
-#' @description Perform a generalized linear model with the cluster bootstrap for analysis of clustered data.
+#' @description Fit a generalized linear model with the cluster bootstrap for analysis of clustered data.
 #' @param model generalized linear model to be fitted with the cluster bootstrap.
 #' @param data dataframe that contains the data.
 #' @param clusterid variable in data that identifies the clusters.
@@ -9,16 +9,21 @@
 #' @param no_cores number of CPU cores to be used.
 #' @return \code{clusbootglm} produces an object of class \code{"clusbootglm"}, containing the following relevant components:
 #' \item{coefficients}{A matrix of \code{B} rows, containing the parameter estimates for all bootstrap samples.}
-#' \item{bootstrap.matrix}{Returns the n*B matrix, of which each column represents a bootstrap sample; each value in a column represents a unit of \code{subjectid}}
+#' \item{bootstrap.matrix}{n*B matrix, of which each column represents a bootstrap sample; each value in a column represents 
+#'                         a unit of \code{subjectid}}
 #' \item{lm.coefs}{Parameter estimates from a single (generalized) linear model.}
 #' \item{boot.coefs}{Mean values of the paramater estimates, derived from the bootstrap coefficients.}
 #' \item{boot.sds}{Standard deviations of cluster bootstrap parameter estimates.}
 #' \item{ci.level}{User defined confidence interval level.}
 #' \item{percentile.interval}{Confidence interval based on percentiles, given the user defined confidence interval level.}
-#' \item{parametric.interval}{Confidence interval based on \code{lm.coefs} and column standard deviations of \code{coefficients}, given the user defined confidence interval level.}
-#' \item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined confidence interval level.}
-#' \item{failed.bootstrap.samples}{When there are bootstrap samples that returned errors (e.g., convergence errors), their sample numbers are listed here.}
-#' @details Some useful methods for the obtained \code{clusbootglm} class object are \code{\link{summary.clusbootglm}}, \code{\link{coef.clusbootglm}} and \code{\link{plot.clusbootglm}}.
+#' \item{parametric.interval}{Confidence interval based on \code{lm.coefs} and column standard deviations of \code{coefficients}, 
+#'                            given the user defined confidence interval level.}
+#' \item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined 
+#'                     confidence interval level.}
+#' \item{failed.bootstrap.samples}{When there are bootstrap samples that returned errors (e.g., convergence errors), 
+#'                                 their sample numbers are listed here.}
+#' @details Some useful methods for the obtained \code{clusbootglm} class object are \code{\link{summary.clusbootglm}}, 
+#'          \code{\link{coef.clusbootglm}}, \code{\link{plot.clusbootglm}}, \code{\link{clusbootmatrix}} and \code{\link{clusbootsample}}.
 #' @examples 
 #' \dontrun{
 #' data(opposites)

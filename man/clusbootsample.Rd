@@ -2,17 +2,17 @@
 % Please edit documentation in R/additional_exports.R
 \name{clusbootsample}
 \alias{clusbootsample}
-\title{Create data for specified bootstrap sample}
+\title{Return data for specified bootstrap sample}
 \usage{
 clusbootsample(object, samplenr)
 }
 \arguments{
 \item{object}{object of class \code{clusbootglm}, created with the \code{clusbootglm} function.}
 
-\item{samplenr}{sample number for which the data frame should be created}
+\item{samplenr}{sample number for which the data frame should be returned.}
 }
 \description{
-Returns the full data frame for a specified bootstrap sample
+Returns the full data frame for a specified bootstrap sample in a \code{clusbootglm} object.
 }
 \examples{
 \dontrun{
@@ -21,5 +21,5 @@ cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject
 clusbootsample(cbglm.1, samplenr=1)}
 }
 \author{
-Mathijs Deen, Mark de Rooij
+Mark de Rooij, Mathijs Deen
 }

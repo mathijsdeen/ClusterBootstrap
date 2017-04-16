@@ -1,4 +1,5 @@
-#' Plot confidence intervals of cluster bootstrap
+#' @title Plot confidence intervals of cluster bootstrap
+#' @description Plots the estimates and their confidence intervals for an object of class \code{clusbootglm}.
 #' @param x object of class \code{clusbootglm}.
 #' @param interval.type which confidence interval should be used. Choose \code{par} for parametric, \code{per} for percentile, or \code{BCa} for BCa interval.
 #' @param show.intercept plot estimate and confidence interval of the intercept.
@@ -23,8 +24,9 @@ plot.clusbootglm<-function(x,interval.type="percentile",show.intercept=FALSE,...
   }
 }
 
-#' Summarize cluster bootstrap output
-#' @param object cluster bootstrap object.
+#' @title Summarize cluster bootstrap output
+#' @description Returns the summary of an object of class \code{clusbootglm}
+#' @param object object of class \code{clusbootglm}.
 #' @param interval.type which confidence interval should be used. Options are \code{parametric}, \code{percentile} and \code{BCa} intervals.
 #' @param ... other arguments.
 #' @author Mathijs Deen
@@ -51,9 +53,10 @@ summary.clusbootglm<-function(object,interval.type="BCa",...){
   }
 }
 
-#' Obtain coefficients from cluster bootstrap object
-#' @param object cluster bootstrap model.
-#' @param type type of coefficient (bootstrap of GLM).
+#' @title Obtain coefficients from cluster bootstrap object
+#' @description Returns the coefficients of an object of class \code{clusbootglm}.
+#' @param object object of class \code{clusbootglm}.
+#' @param type type of coefficient (\code{bootstrap} or \code{GLM}).
 #' @param ... other arguments.
 #' @examples \dontrun{
 #' data(opposites)
@@ -64,14 +67,14 @@ summary.clusbootglm<-function(object,interval.type="BCa",...){
 coef.clusbootglm<-function(object,type="bootstrap",...){
   model <- object
   if(type=="bootstrap"){
-    tabel <- cbind(model$boot.coefs)
-    colnames(tabel)<-'bootstrap'
+    coeftable <- cbind(model$boot.coefs)
+    colnames(coeftable)<-'bootstrap'
   } else if(type=="GLM"){
-    tabel <- cbind(model$lm.coefs)
-    colnames(tabel)<-"GLM"
+    coeftable <- cbind(model$lm.coefs)
+    colnames(coeftable)<-"GLM"
   } else {
     stop("type must be 'bootstrap' or 'GLM'",call.=FALSE)
   }
-  rownames(tabel)<-rownames(model$parametric.interval)
-  tabel
+  rownames(coeftable)<-rownames(model$parametric.interval)
+  return(coeftable)
 }

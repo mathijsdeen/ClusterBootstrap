@@ -17,7 +17,7 @@
 \item{...}{other arguments.}
 }
 \description{
-Plot confidence intervals of cluster bootstrap
+Plots the estimates and their confidence intervals for an object of class \code{clusbootglm}.
 }
 \examples{
 \dontrun{

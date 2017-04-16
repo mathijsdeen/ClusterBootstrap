@@ -75,14 +75,15 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   sdcoefs <- apply(coefs, 2, sd, na.rm = TRUE)
   ci_parametric <- cbind(res.or$coef + confint.Zboundaries[1] * sdcoefs, res.or$coef + confint.Zboundaries[2] * sdcoefs)
   #BCa interval:
+  B_alt <- B - length(failed.samples)
   BCa.coefs <- coefs[!is.na(coefs[,1]),]
-  acc <- clusjackglm(model,data,clusterid,family,B,verbose=F) #possibly buggy: B gets smaller when there are NAs
-  biascorr <- qnorm(colSums(sweep(BCa.coefs,2,res.or$coef)<0)/B) #possibly buggy: B gets smaller when there are NAs
+  acc <- clusjackglm(model,data,clusterid,family,B_alt,verbose=F)
+  biascorr <- qnorm(colSums(sweep(BCa.coefs,2,res.or$coef)<0)/B_alt)
   tt <- ci_BCa <- matrix(NA, nrow=p, ncol=2)
   ooo <- NA
   for (i in 1:p){
     tt[i,] <- as.vector(pnorm(biascorr[i] + (biascorr[i] + confint.Zboundaries)/(1 - acc[i] * (biascorr[i] + confint.Zboundaries))))
-    ooo <- trunc(tt[i,]*B) #buggy: B gets smaller when there are NAs
+    ooo <- trunc(tt[i,]*B_alt)
     ci_BCa[i,]<-sort(BCa.coefs[,i])[ooo]
   }
   #results:

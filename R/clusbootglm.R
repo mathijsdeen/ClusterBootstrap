@@ -10,7 +10,7 @@
 #' @return \code{clusbootglm} produces an object of class \code{"clusbootglm"}, containing the following relevant components:
 #' \item{coefficients}{A matrix of \code{B} rows, containing the parameter estimates for all bootstrap samples.}
 #' \item{bootstrap.matrix}{n*B matrix, of which each column represents a bootstrap sample; each value in a column represents 
-#'                         a unit of \code{subjectid}}
+#'                         a unit of \code{subjectid}.}
 #' \item{lm.coefs}{Parameter estimates from a single (generalized) linear model.}
 #' \item{boot.coefs}{Mean values of the paramater estimates, derived from the bootstrap coefficients.}
 #' \item{boot.sds}{Standard deviations of cluster bootstrap parameter estimates.}

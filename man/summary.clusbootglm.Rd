@@ -2,7 +2,7 @@
 % Please edit documentation in R/clusbootglm_s3_methods.R
 \name{summary.clusbootglm}
 \alias{summary.clusbootglm}
-\title{Summarize cluster bootstrap output}
+\title{Summarize output of cluster bootstrap GLM}
 \usage{
 \method{summary}{clusbootglm}(object, interval.type = "BCa", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{other arguments.}
 }
 \description{
-Returns the summary of an object of class \code{clusbootglm}
+Returns the summary of an object of class \code{clusbootglm}.
 }
 \examples{
 \dontrun{

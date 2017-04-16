@@ -2,7 +2,7 @@
 % Please edit documentation in R/clusbootglm_s3_methods.R
 \name{plot.clusbootglm}
 \alias{plot.clusbootglm}
-\title{Plot confidence intervals of cluster bootstrap}
+\title{Plot estimates and confidence intervals of cluster bootstrap GLM}
 \usage{
 \method{plot}{clusbootglm}(x, interval.type = "percentile",
   show.intercept = FALSE, ...)

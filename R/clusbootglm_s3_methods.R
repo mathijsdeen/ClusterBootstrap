@@ -1,4 +1,4 @@
-#' @title Plot confidence intervals of cluster bootstrap
+#' @title Plot estimates and confidence intervals of cluster bootstrap GLM
 #' @description Plots the estimates and their confidence intervals for an object of class \code{clusbootglm}.
 #' @param x object of class \code{clusbootglm}.
 #' @param interval.type which confidence interval should be used. Choose \code{par} for parametric, \code{per} for percentile, or \code{BCa} for BCa interval.
@@ -24,8 +24,8 @@ plot.clusbootglm<-function(x,interval.type="percentile",show.intercept=FALSE,...
   }
 }
 
-#' @title Summarize cluster bootstrap output
-#' @description Returns the summary of an object of class \code{clusbootglm}
+#' @title Summarize output of cluster bootstrap GLM
+#' @description Returns the summary of an object of class \code{clusbootglm}.
 #' @param object object of class \code{clusbootglm}.
 #' @param interval.type which confidence interval should be used. Options are \code{parametric}, \code{percentile} and \code{BCa} intervals.
 #' @param ... other arguments.

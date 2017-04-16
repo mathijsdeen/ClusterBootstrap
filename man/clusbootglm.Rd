@@ -2,13 +2,13 @@
 % Please edit documentation in R/clusbootglm.R
 \name{clusbootglm}
 \alias{clusbootglm}
-\title{Fit (generalized) linear models with the cluster bootstrap}
+\title{Fit generalized linear models with the cluster bootstrap}
 \usage{
 clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
   confint.level = 0.95, no_cores = 1)
 }
 \arguments{
-\item{model}{(generalized) linear model to be fitted with the cluster bootstrap.}
+\item{model}{generalized linear model to be fitted with the cluster bootstrap.}
 
 \item{data}{dataframe that contains the data.}
 
@@ -23,7 +23,7 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 \item{no_cores}{number of CPU cores to be used.}
 }
 \value{
-\code{clusbootglm} produces an object of class \code{"clusboot"}, containing the following relevant components:
+\code{clusbootglm} produces an object of class \code{"clusbootglm"}, containing the following relevant components:
 \item{coefficients}{A matrix of \code{B} rows, containing the parameter estimates for all bootstrap samples.}
 \item{bootstrap.matrix}{Returns the n*B matrix, of which each column represents a bootstrap sample; each value in a column represents a unit of \code{subjectid}}
 \item{lm.coefs}{Parameter estimates from a single (generalized) linear model.}
@@ -36,10 +36,10 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 \item{failed.bootstrap.samples}{When there are bootstrap samples that returned errors (e.g., convergence errors), their sample numbers are listed here.}
 }
 \description{
-Perform a (generalized) linear model with the cluster bootstrap for analysis of clustered data.
+Perform a generalized linear model with the cluster bootstrap for analysis of clustered data.
 }
 \details{
-Some useful methods for the obtained \code{clusboot} class object are \code{\link{summary.clusboot}}, \code{\link{coef.clusboot}} and \code{\link{plot.clusboot}}.
+Some useful methods for the obtained \code{clusbootglm} class object are \code{\link{summary.clusbootglm}}, \code{\link{coef.clusbootglm}} and \code{\link{plot.clusbootglm}}.
 }
 \examples{
 \dontrun{

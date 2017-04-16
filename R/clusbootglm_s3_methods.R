@@ -1,5 +1,5 @@
 #' Plot confidence intervals of cluster bootstrap
-#' @param x object of class clusboot.
+#' @param x object of class \code{clusbootglm}.
 #' @param interval.type which confidence interval should be used. Choose \code{par} for parametric, \code{per} for percentile, or \code{BCa} for BCa interval.
 #' @param show.intercept plot estimate and confidence interval of the intercept.
 #' @param ... other arguments.
@@ -10,7 +10,7 @@
 #' @import graphics
 #' @author Mathijs Deen
 #' @export
-plot.clusboot<-function(x,interval.type="percentile",show.intercept=FALSE,...){
+plot.clusbootglm<-function(x,interval.type="percentile",show.intercept=FALSE,...){
   model <- x
   if(interval.type=="percentile"){
     cbglm.doplot(model$percentile.interval,model$boot.coefs,method="per",show.intercept)
@@ -33,7 +33,7 @@ plot.clusboot<-function(x,interval.type="percentile",show.intercept=FALSE,...){
 #' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
 #' summary(cbglm.1, interval.type="percentile")}
 #' @export
-summary.clusboot<-function(object,interval.type="BCa",...){
+summary.clusbootglm<-function(object,interval.type="BCa",...){
   model <- object
   ci.boundaries <- c((1-model$ci.level)/2,1-(1-model$ci.level)/2)
   cat(sprintf("\nCall:\n"))
@@ -61,7 +61,7 @@ summary.clusboot<-function(object,interval.type="BCa",...){
 #' coef(cbglm.1, type="bootstrap")}
 #' @author Mathijs Deen
 #' @export
-coef.clusboot<-function(object,type="bootstrap",...){
+coef.clusbootglm<-function(object,type="bootstrap",...){
   model <- object
   if(type=="bootstrap"){
     tabel <- cbind(model$boot.coefs)

@@ -7,7 +7,7 @@
 clusbootsample(object, samplenr)
 }
 \arguments{
-\item{object}{object of class \code{clusboot}, created with the \code{clusbootglm} function.}
+\item{object}{object of class \code{clusbootglm}, created with the \code{clusbootglm} function.}
 
 \item{samplenr}{sample number for which the data frame should be created}
 }

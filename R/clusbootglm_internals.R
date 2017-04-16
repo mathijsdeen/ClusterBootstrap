@@ -31,14 +31,6 @@ cbglm.signif.check<-function(ci_row){
   else return(0)
 }
 
-clusbootglm_sample_glm_old <-function(f, i, Obsno, model, family, data){
-  #deprecated function, will be deleted
-  j <- f[, i]
-  obs <- unlist(Obsno[j])
-  try(bootrep <- glm(model, family = family, data = data[obs,]))
-  return(bootrep$coef)
-}
-
 clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data){
   j <- f[, i]
   obs <- unlist(Obsno[j])

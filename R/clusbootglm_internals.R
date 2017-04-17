@@ -31,15 +31,16 @@ cbglm.signif.check<-function(ci_row){
   else return(0)
 }
 
-clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data){
+clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data, p){
   j <- f[, i]
   obs <- unlist(Obsno[j])
   bootcoef <- tryCatch(coef(glm(model, family = family, data = data[obs,])),
                       warning=function(x) rep(as.numeric(NA),length(coef(glm(model,family=binomial, data=data[obs,])))))
+  ifelse(length(bootcoef)==p, bootcoef <- as.vector(bootcoef), bootcoef <- rep(NA,p))
   return(bootcoef)
 }
 
-clusjackglm <- function (model, data, clusterid, family = gaussian, B = 5000, verbose=F) {
+clusjackglm <- function (model, data, clusterid, family = gaussian, B = 5000) {
   res.or <- glm(model,family=family, data = data)
   n <- nrow(data)
   p <- length(res.or$coef)
@@ -49,12 +50,11 @@ clusjackglm <- function (model, data, clusterid, family = gaussian, B = 5000, ve
   nc <- length(clusters)
   Obsno <- split(1:n, cluster)
   for (i in 1:nc) {
-    if(verbose) cat("Jackknife Sample = ", i, "\n")
     obs <- unlist(Obsno[-i])
-    jackrep <- glm(model, family=family, data = data[obs,])
-    coefs[i, ] <- as.vector(jackrep$coef)
+    jackcoef <- coef(glm(model, family=family, data = data[obs,]))
+    ifelse(length(jackcoef)==p, coefs[i, ] <- as.vector(jackcoef), coefs[i,] <- rep(NA,p))
   }
-  uu <- -sweep(coefs,2,colMeans(coefs), FUN="-")
+  uu <- -sweep(coefs,2,colMeans(coefs,na.rm = T), FUN="-")
   acc<-rep(NA,p)
   for(i in 1:p){
     acc[i] <- sum(uu[,i] * uu[,i]* uu[,i])/(6 * (sum(uu[,i] * uu[,i]))^1.5)

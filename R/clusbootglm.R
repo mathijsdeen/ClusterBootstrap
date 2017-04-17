@@ -56,7 +56,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
         obs <- unlist(Obsno[j])
         bootcoef <- tryCatch(coef(glm(model, family = family, data = data[obs,])), 
                              warning=function(x) rep(as.numeric(NA),length(coef(glm(model,family=binomial, data=data[obs,])))))
-        coefs[i, ] <- as.vector(bootcoef)
+        ifelse(length(bootcoef)==p, coefs[i, ] <- as.vector(bootcoef), coefs[i,] <- rep(NA,p))
       }
     }
     #parallel:
@@ -65,9 +65,9 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
       previous_RNGkind <- RNGkind()[1]
       RNGkind("L'Ecuyer-CMRG")
       nextRNGStream(.Random.seed)
-      clusterExport(cl, varlist = c("f", "Obsno", "model", "family", "data", "clusbootglm_sample_glm"),envir = environment())
+      clusterExport(cl, varlist = c("f", "Obsno", "model", "family", "data", "p", "clusbootglm_sample_glm"),envir = environment())
       splitclusters <- 1:B
-      out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data))
+      out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p))
       coefs <- t(out)
       stopCluster(cl)
       RNGkind(previous_RNGkind)
@@ -82,7 +82,76 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   #BCa interval:
   B_alt <- B - length(failed.samples)
   BCa.coefs <- coefs[!is.na(coefs[,1]),]
-  acc <- clusjackglm(model,data,clusterid,family,B_alt,verbose=F)
+  acc <- clusjackglm(model,data,clusterid,family,B_alt)
+  biascorr <- qnorm(colSums(sweep(BCa.coefs,2,res.or$coef)<0,na.rm = T)/B_alt)
+  tt <- ci_BCa <- matrix(NA, nrow=p, ncol=2)
+  ooo <- NA
+  for (i in 1:p){
+    tt[i,] <- as.vector(pnorm(biascorr[i] + (biascorr[i] + confint.Zboundaries)/(1 - acc[i] * (biascorr[i] + confint.Zboundaries))))
+    ooo <- trunc(tt[i,]*B_alt)
+    ci_BCa[i,]<-sort(BCa.coefs[,i])[ooo]
+  }
+  #results:
+  rownames(ci_percentile) <- rownames(ci_BCa) <- dimnames(ci_parametric)[[1]]
+  result <- list(call = match.call(), coefficients = coefs, data = data, bootstrap.matrix = f, subject.vector = clusterid, 
+                 lm.coefs = res.or$coef, boot.coefs = colMeans(coefs, na.rm = TRUE), boot.sds = sdcoefs, 
+                 ci.level = confint.level, percentile.interval = ci_percentile, parametric.interval = ci_parametric, 
+                 BCa.interval = ci_BCa, failed.bootstrap.samples = failed.samples)
+  class(result) <- "clusbootglm"
+  return(result)
+}
+
+#deprecated (as.factor error), will be deleted
+clusbootglm_deprecated <- function(model, data, clusterid, family=gaussian,B=5000,confint.level=.95,no_cores=1){
+  res.or <- glm(model,family=family, data = data)
+  callformula <- match.call()
+  confint.pboundaries = c((1-confint.level)/2,1-(1-confint.level)/2)
+  confint.Zboundaries = qnorm(confint.pboundaries)
+  n <- nrow(data) 
+  p <- length(res.or$coef) 
+  coefs <- matrix(NA, nrow = B, ncol = p)
+  cluster <- as.character(clusterid)
+  clusters <- unique(cluster)
+  Obsno <- split(1:n, cluster)
+  f = matrix(clusters,length(clusters),B)
+  ff = matrix(f,prod(dim(f)),1)
+  fff = sample(ff)
+  f = matrix(fff,length(clusters),B)
+  if(is.numeric(no_cores) & no_cores > 0){
+    #serial:
+    if(no_cores==1){
+      for (i in 1:B) {
+        j <- f[,i]
+        obs <- unlist(Obsno[j])
+        bootcoef <- tryCatch(coef(glm(model, family = family, data = data[obs,])), 
+                             warning=function(x) rep(as.numeric(NA),length(coef(glm(model,family=binomial, data=data[obs,])))))
+        coefs[i, ] <- as.vector(bootcoef)
+      }
+    }
+    #parallel:
+    if(no_cores>1){
+      cl <- makeCluster(max(min(no_cores,detectCores()),1)) 
+      previous_RNGkind <- RNGkind()[1]
+      RNGkind("L'Ecuyer-CMRG")
+      nextRNGStream(.Random.seed)
+      clusterExport(cl, varlist = c("f", "Obsno", "model", "family", "data", "p", "clusbootglm_sample_glm"),envir = environment())
+      splitclusters <- 1:B
+      out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p))
+      coefs <- t(out)
+      stopCluster(cl)
+      RNGkind(previous_RNGkind)
+    }
+  }
+  failed.samples <- which(is.na(coefs[,1]))
+  #percentile interval:
+  ci_percentile <- t(apply(coefs, 2, quantile, probs = confint.pboundaries, na.rm = TRUE))
+  #parametric interval:
+  sdcoefs <- apply(coefs, 2, sd, na.rm = TRUE)
+  ci_parametric <- cbind(res.or$coef + confint.Zboundaries[1] * sdcoefs, res.or$coef + confint.Zboundaries[2] * sdcoefs)
+  #BCa interval:
+  B_alt <- B - length(failed.samples)
+  BCa.coefs <- coefs[!is.na(coefs[,1]),]
+  acc <- clusjackglm(model,data,clusterid,family,B_alt)
   biascorr <- qnorm(colSums(sweep(BCa.coefs,2,res.or$coef)<0)/B_alt)
   tt <- ci_BCa <- matrix(NA, nrow=p, ncol=2)
   ooo <- NA

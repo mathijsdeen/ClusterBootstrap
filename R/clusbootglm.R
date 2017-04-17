@@ -76,6 +76,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   }
   #failed.samples <- which(is.na(coefs[,1]))
   invalid.samples <- colSums(is.na(coefs))
+  names(invalid.samples) <- names(res.or$coef)
   #percentile interval:
   ci_percentile <- t(apply(coefs, 2, quantile, probs = confint.pboundaries, na.rm = TRUE))
   #parametric interval:

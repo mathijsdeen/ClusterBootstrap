@@ -34,7 +34,6 @@
 #' @export
 clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.level=.95,no_cores=1){
   res.or <- glm(model,family=family, data = data)
-  callformula <- match.call()
   confint.pboundaries = c((1-confint.level)/2,1-(1-confint.level)/2)
   confint.Zboundaries = qnorm(confint.pboundaries)
   n <- nrow(data) 

@@ -36,8 +36,7 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
                            given the user defined confidence interval level.}
 \item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined 
                     confidence interval level.}
-\item{failed.bootstrap.samples}{When there are bootstrap samples that returned errors (e.g., convergence errors), 
-                                their sample numbers are listed here.}
+\item{failed.bootstrap.samples}{For each of the coefficients, the number of failed bootstrap samples are given.}
 }
 \description{
 Fit a generalized linear model with the cluster bootstrap for analysis of clustered data.

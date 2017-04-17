@@ -31,16 +31,18 @@ cbglm.signif.check<-function(ci_row){
   else return(0)
 }
 
-clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data, p){
+clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data, p, res.or){
   j <- f[, i]
   obs <- unlist(Obsno[j])
+  coef <- rep(NA,p) #added
   bootcoef <- tryCatch(coef(glm(model, family = family, data = data[obs,])),
                       warning=function(x) rep(as.numeric(NA),length(coef(glm(model,family=binomial, data=data[obs,])))))
-  ifelse(length(bootcoef)==p, bootcoef <- as.vector(bootcoef), bootcoef <- rep(NA,p))
-  return(bootcoef)
+  #ifelse(length(bootcoef)==p, bootcoef <- as.vector(bootcoef), bootcoef <- rep(NA,p))
+  ifelse(length(bootcoef)==p, coef <- as.vector(bootcoef), coef[which(names(res.or$coef) %in% names(bootcoef))] <- bootcoef)
+  return(coef)
 }
 
-clusjackglm <- function (model, data, clusterid, family = gaussian, B = 5000) {
+clusjackglm <- function (model, data, clusterid, family = gaussian) {
   res.or <- glm(model,family=family, data = data)
   n <- nrow(data)
   p <- length(res.or$coef)

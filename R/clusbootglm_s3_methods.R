@@ -39,7 +39,7 @@ summary.clusbootglm<-function(object,interval.type="BCa",...){
   model <- object
   ci.boundaries <- c((1-model$ci.level)/2,1-(1-model$ci.level)/2)
   cat(sprintf("\nCall:\n"))
-  print(model$Call)
+  print(model$call)
   cat(sprintf("\n"))
   ifelse(interval.type=="BCa", confinttab <- model$BCa.interval, ifelse(interval.type=="parametric", confinttab <- model$parametric.interval, confinttab <- model$percentile.interval))
   tabel <- cbind(model$lm.coefs,model$boot.coefs,model$boot.sds,confinttab)
@@ -47,9 +47,9 @@ summary.clusbootglm<-function(object,interval.type="BCa",...){
   print(tabel)
   cat(sprintf("---\n"))
   cat(paste(100*model$ci.level,"% confidence interval using ", ifelse(interval.type=="BCa", "bias corrected and accelerated", ifelse(interval.type=="parametric", "parametric", "percentile")), " cluster bootstrap intervals", sep=""))
-  failed.samples.n <- length(model$failed.bootstrap.samples)
+  failed.samples.n <- sum(model$failed.bootstrap.samples)
   if(failed.samples.n>0){
-    cat(sprintf("\nThere were %d bootstrap samples which returned NA's", failed.samples.n))
+    cat(sprintf("\nThere were %d bootstrap samples which returned NA's", sum(is.na(rowSums(model$coefficients)))))
   }
 }
 

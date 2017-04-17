@@ -6,3 +6,4 @@
 .Rbuildignore
 ClusterBootstrap.Rproj
 testing.R
+make_pdf.R

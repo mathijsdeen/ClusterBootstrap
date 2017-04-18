@@ -14,13 +14,13 @@
 plot.clusbootglm<-function(x,interval.type="percentile",show.intercept=FALSE,...){
   model <- x
   if(interval.type=="percentile"){
-    cbglm.doplot(model$percentile.interval,model$boot.coefs,method="per",show.intercept)
+    cbglm_doplot(model$percentile.interval,model$boot.coefs,method="per",show.intercept)
   }
   if(interval.type=="parametric"){
-    cbglm.doplot(model$parametric.interval,model$boot.coefs,method="par",show.intercept)    
+    cbglm_doplot(model$parametric.interval,model$boot.coefs,method="par",show.intercept)    
   }
   if(interval.type=="BCa"){
-    cbglm.doplot(model$BCa.interval,model$boot.coefs,method="BCa",show.intercept)
+    cbglm_doplot(model$BCa.interval,model$boot.coefs,method="BCa",show.intercept)
   }
 }
 

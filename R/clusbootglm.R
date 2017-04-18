@@ -3,7 +3,7 @@
 #' @param model generalized linear model to be fitted with the cluster bootstrap.
 #' @param data dataframe that contains the data.
 #' @param clusterid variable in data that identifies the clusters.
-#' @param family currently, only Gaussian is supported.
+#' @param family error distribution and link function to be used in the model, e.g. \code{gaussian} or \code{binomial}.
 #' @param B number of bootstrap samples.
 #' @param confint.level level of confidence interval.
 #' @param no_cores number of CPU cores to be used.

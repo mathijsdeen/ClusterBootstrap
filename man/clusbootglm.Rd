@@ -14,7 +14,7 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 
 \item{clusterid}{variable in data that identifies the clusters.}
 
-\item{family}{currently, only Gaussian is supported.}
+\item{family}{error distribution and link function to be used in the model, e.g. \code{gaussian} or \code{binomial}.}
 
 \item{B}{number of bootstrap samples.}
 

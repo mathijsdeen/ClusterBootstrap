@@ -16,7 +16,7 @@ clusbootmatrix <- function(object, whichsample="all"){
     if(whichsample=="all"){
       out <- with(object,bootstrap.matrix)
     }else if(whichsample=="failed"){
-      out <- with(object, bootstrap.matrix[,which(is.na(rowSums(object$coefficients)))])
+      out <- with(object, bootstrap.matrix[,samples.with.NA.coef])
     }else{
       stop("\"whichsample\" should be \"all\", \"failed\" or numeric", call.=F)
     }

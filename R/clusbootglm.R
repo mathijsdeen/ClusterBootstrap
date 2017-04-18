@@ -20,6 +20,7 @@
 #'                            given the user defined confidence interval level.}
 #' \item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined 
 #'                     confidence interval level.}
+#' \item{samples.with.NA.coef}{Cluster bootstrap sample numbers with at least one coefficient being \code{NA}.}
 #' \item{failed.bootstrap.samples}{For each of the coefficients, the number of failed bootstrap samples are given.}
 #' @details Some useful methods for the obtained \code{clusbootglm} class object are \code{\link{summary.clusbootglm}}, 
 #'          \code{\link{coef.clusbootglm}}, \code{\link{plot.clusbootglm}}, \code{\link{clusbootmatrix}} and \code{\link{clusbootsample}}.
@@ -77,6 +78,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   #failed.samples <- which(is.na(coefs[,1]))
   invalid.samples <- colSums(is.na(coefs))
   names(invalid.samples) <- names(res.or$coef)
+  samples.with.NA.coef <- which(is.na(rowSums(coefs)))
   #percentile interval:
   ci_percentile <- t(apply(coefs, 2, quantile, probs = confint.pboundaries, na.rm = TRUE))
   #parametric interval:
@@ -102,7 +104,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   result <- list(call = match.call(), coefficients = coefs, data = data, bootstrap.matrix = f, subject.vector = clusterid, 
                  lm.coefs = res.or$coef, boot.coefs = colMeans(coefs, na.rm = TRUE), boot.sds = sdcoefs, 
                  ci.level = confint.level, percentile.interval = ci_percentile, parametric.interval = ci_parametric, 
-                 BCa.interval = ci_BCa, failed.bootstrap.samples = invalid.samples) #failed.samples)
+                 BCa.interval = ci_BCa, samples.with.NA.coef = samples.with.NA.coef, failed.bootstrap.samples = invalid.samples) #failed.samples)
   class(result) <- "clusbootglm"
   return(result)
 }

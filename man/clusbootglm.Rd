@@ -36,6 +36,7 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
                            given the user defined confidence interval level.}
 \item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined 
                     confidence interval level.}
+\item{samples.with.NA.coef}{Cluster bootstrap sample numbers with at least one coefficient being \code{NA}.}
 \item{failed.bootstrap.samples}{For each of the coefficients, the number of failed bootstrap samples are given.}
 }
 \description{

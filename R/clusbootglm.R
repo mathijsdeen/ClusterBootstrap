@@ -55,7 +55,6 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
         obs <- unlist(Obsno[j])
         bootcoef <- tryCatch(coef(glm(model, family = family, data = data[obs,])), 
                              warning=function(x) rep(as.numeric(NA),p))
-        #ifelse(length(bootcoef)==p, coefs[i, ] <- as.vector(bootcoef), coefs[i,] <- rep(NA,p))
         coefs[i,which(names(res.or$coef) %in% names(bootcoef))] <- bootcoef
       }
     }
@@ -65,17 +64,14 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
       previous_RNGkind <- RNGkind()[1]
       RNGkind("L'Ecuyer-CMRG")
       nextRNGStream(.Random.seed)
-      #clusterExport(cl, varlist = c("f", "Obsno", "model", "family", "data", "p", "clusbootglm_sample_glm"),envir = environment())
       clusterExport(cl, varlist = c("f", "Obsno", "model", "family", "data", "p", "res.or", "clusbootglm_sample_glm"),envir = environment())
       splitclusters <- 1:B
-      #out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p))
       out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p, res.or))
       coefs <- t(out)
       stopCluster(cl)
       RNGkind(previous_RNGkind)
     }
   }
-  #failed.samples <- which(is.na(coefs[,1]))
   invalid.samples <- colSums(is.na(coefs))
   names(invalid.samples) <- names(res.or$coef)
   samples.with.NA.coef <- which(is.na(rowSums(coefs)))
@@ -85,17 +81,13 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   sdcoefs <- apply(coefs, 2, sd, na.rm = TRUE)
   ci_parametric <- cbind(res.or$coef + confint.Zboundaries[1] * sdcoefs, res.or$coef + confint.Zboundaries[2] * sdcoefs)
   #BCa interval:
-  #B_alt <- B - length(failed.samples)
   B_alt <- B - invalid.samples
-  #BCa.coefs <- coefs[!is.na(coefs[,1]),]
   acc <- clusjackglm(model,data,clusterid,family)
-  #biascorr <- qnorm(colSums(sweep(BCa.coefs,2,res.or$coef)<0,na.rm = T)/B_alt)
   biascorr <- qnorm(colSums(sweep(coefs,2,res.or$coef)<0,na.rm = T)/B_alt)
   tt <- ci_BCa <- matrix(NA, nrow=p, ncol=2)
   ooo <- NA
   for (i in 1:p){
     tt[i,] <- as.vector(pnorm(biascorr[i] + (biascorr[i] + confint.Zboundaries)/(1 - acc[i] * (biascorr[i] + confint.Zboundaries))))
-    #ooo <- trunc(tt[i,]*B_alt)
     ooo <- trunc(tt[i,]*B_alt[i])
     ci_BCa[i,]<-sort(coefs[,i])[ooo]
   }
@@ -104,7 +96,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   result <- list(call = match.call(), coefficients = coefs, data = data, bootstrap.matrix = f, subject.vector = clusterid, 
                  lm.coefs = res.or$coef, boot.coefs = colMeans(coefs, na.rm = TRUE), boot.sds = sdcoefs, 
                  ci.level = confint.level, percentile.interval = ci_percentile, parametric.interval = ci_parametric, 
-                 BCa.interval = ci_BCa, samples.with.NA.coef = samples.with.NA.coef, failed.bootstrap.samples = invalid.samples) #failed.samples)
+                 BCa.interval = ci_BCa, samples.with.NA.coef = samples.with.NA.coef, failed.bootstrap.samples = invalid.samples)
   class(result) <- "clusbootglm"
   return(result)
 }

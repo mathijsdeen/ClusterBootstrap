@@ -49,7 +49,7 @@ summary.clusbootglm<-function(object,interval.type="BCa",...){
   cat(paste(100*model$ci.level,"% confidence interval using ", ifelse(interval.type=="BCa", "bias corrected and accelerated", ifelse(interval.type=="parametric", "parametric", "percentile")), " cluster bootstrap intervals", sep=""))
   failed.samples.n <- sum(model$failed.bootstrap.samples)
   if(failed.samples.n>0){
-    cat(sprintf("\nThere were %d bootstrap samples which returned NA's", sum(is.na(rowSums(model$coefficients)))))
+    cat(sprintf("\nThere were %d bootstrap samples which returned at least one NA", sum(is.na(rowSums(model$coefficients)))))
   }
 }
 

@@ -75,25 +75,16 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   invalid.samples <- colSums(is.na(coefs))
   names(invalid.samples) <- names(res.or$coef)
   samples.with.NA.coef <- which(is.na(rowSums(coefs)))
-  #percentile interval:
-  ci_percentile <- t(apply(coefs, 2, quantile, probs = confint.pboundaries, na.rm = TRUE))
-  #parametric interval:
   sdcoefs <- apply(coefs, 2, sd, na.rm = TRUE)
-  ci_parametric <- cbind(res.or$coef + confint.Zboundaries[1] * sdcoefs, res.or$coef + confint.Zboundaries[2] * sdcoefs)
-  #BCa interval:
-  B_alt <- B - invalid.samples
-  acc <- clusjackglm(model,data,clusterid,family)
-  biascorr <- qnorm(colSums(sweep(coefs,2,res.or$coef)<0,na.rm = T)/B_alt)
-  tt <- ci_BCa <- matrix(NA, nrow=p, ncol=2)
-  ooo <- NA
-  for (i in 1:p){
-    tt[i,] <- as.vector(pnorm(biascorr[i] + (biascorr[i] + confint.Zboundaries)/(1 - acc[i] * (biascorr[i] + confint.Zboundaries))))
-    ooo <- trunc(tt[i,]*B_alt[i])
-    ci_BCa[i,]<-sort(coefs[,i])[ooo]
-  }
+  #confidence intervals:
+  ci_percentile <- confint_percentile(coefs, confint.pboundaries)
+  ci_parametric <- confint_parametric(sdcoefs, res.or$coef, confint.Zboundaries)
+  ci_BCa <- confint_BCa(B, invalid.samples, model, data, clusterid, family, coefs, res.or$coef, p, confint.Zboundaries)
   #results:
   rownames(ci_percentile) <- rownames(ci_BCa) <- dimnames(ci_parametric)[[1]]
-  result <- list(call = match.call(), coefficients = coefs, data = data, bootstrap.matrix = f, subject.vector = clusterid, 
+  colnames(ci_parametric) <- colnames(ci_BCa) <- dimnames(ci_percentile)[[2]]
+  result <- list(call = match.call(), model=model, family=family, B = B, coefficients = coefs, data = data, 
+                 bootstrap.matrix = f, subject.vector = clusterid, 
                  lm.coefs = res.or$coef, boot.coefs = colMeans(coefs, na.rm = TRUE), boot.sds = sdcoefs, 
                  ci.level = confint.level, percentile.interval = ci_percentile, parametric.interval = ci_parametric, 
                  BCa.interval = ci_BCa, samples.with.NA.coef = samples.with.NA.coef, failed.bootstrap.samples = invalid.samples)

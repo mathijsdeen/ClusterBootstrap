@@ -12,9 +12,9 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 
 \item{data}{dataframe that contains the data.}
 
-\item{clusterid}{variable in data that identifies the clusters.}
+\item{clusterid}{variable in data that identifies the clusters. Should consist of whole numbers.}
 
-\item{family}{error distribution and link function to be used in the model, e.g. \code{gaussian} or \code{binomial}.}
+\item{family}{error distribution to be used in the model, e.g. \code{gaussian} or \code{binomial}.}
 
 \item{B}{number of bootstrap samples.}
 

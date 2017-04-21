@@ -2,8 +2,8 @@
 #' @description Fit a generalized linear model with the cluster bootstrap for analysis of clustered data.
 #' @param model generalized linear model to be fitted with the cluster bootstrap.
 #' @param data dataframe that contains the data.
-#' @param clusterid variable in data that identifies the clusters.
-#' @param family error distribution and link function to be used in the model, e.g. \code{gaussian} or \code{binomial}.
+#' @param clusterid variable in data that identifies the clusters. Should consist of whole numbers.
+#' @param family error distribution to be used in the model, e.g. \code{gaussian} or \code{binomial}.
 #' @param B number of bootstrap samples.
 #' @param confint.level level of confidence interval.
 #' @param no_cores number of CPU cores to be used.
@@ -34,6 +34,17 @@
 #' @import utils
 #' @export
 clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.level=.95,no_cores=1){
+  #checks
+  if(!class(clusterid)=="numeric"){
+    stop("Argument \"clusterid\" should be a vector of whole numbers.",call. = F)
+  }else if(sum(!(abs(clusterid - round(clusterid)) < .Machine$double.eps^0.5))>0){
+    stop("There are values in \"clusterid\" that are fractions.",call. = F)
+  }
+  tt_cores <- detectCores()
+  if(no_cores>tt_cores) {
+    message(sprintf("Note: \"no_cores\" was set to %d, but only %d are available. Using all cores.",no_cores,tt_cores))
+  }
+  #setup
   res.or <- glm(model,family=family, data = data)
   confint.pboundaries = c((1-confint.level)/2,1-(1-confint.level)/2)
   confint.Zboundaries = qnorm(confint.pboundaries)
@@ -47,6 +58,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   ff = matrix(f,prod(dim(f)),1)
   fff = sample(ff)
   f = matrix(fff,length(clusters),B)
+  #resampling
   if(is.numeric(no_cores) & no_cores > 0){
     #serial:
     if(no_cores==1){
@@ -60,11 +72,11 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
     }
     #parallel:
     if(no_cores>1){
-      cl <- makeCluster(max(min(no_cores,detectCores()),1)) 
+      cl <- makeCluster(max(min(no_cores,tt_cores,2))) 
       previous_RNGkind <- RNGkind()[1]
       RNGkind("L'Ecuyer-CMRG")
       nextRNGStream(.Random.seed)
-      clusterExport(cl, varlist = c("f", "Obsno", "model", "family", "data", "p", "res.or", "clusbootglm_sample_glm"),envir = environment())
+      clusterExport(cl,varlist=c("f","Obsno","model","family","data","p","res.or","clusbootglm_sample_glm"),envir=environment())
       splitclusters <- 1:B
       out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p, res.or))
       coefs <- t(out)
@@ -72,6 +84,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
       RNGkind(previous_RNGkind)
     }
   }
+  #post processing
   invalid.samples <- colSums(is.na(coefs))
   names(invalid.samples) <- names(res.or$coef)
   samples.with.NA.coef <- which(is.na(rowSums(coefs)))

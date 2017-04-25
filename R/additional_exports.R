@@ -4,7 +4,7 @@
 #' @param samplenr sample number for which the data frame should be returned.
 #' @examples \dontrun{
 #' data(opposites)
-#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 #' clusbootsample(cbglm.1, samplenr=1)}
 #' @author Mark de Rooij, Mathijs Deen
 #' @export

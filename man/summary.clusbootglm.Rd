@@ -19,7 +19,7 @@ Returns the summary of an object of class \code{clusbootglm}.
 \examples{
 \dontrun{
 data(opposites)
-cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 summary(cbglm.1, interval.type="percentile")}
 }
 \author{

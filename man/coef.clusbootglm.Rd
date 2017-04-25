@@ -19,7 +19,7 @@ Returns the coefficients of an object of class \code{clusbootglm}.
 \examples{
 \dontrun{
 data(opposites)
-cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 coef(cbglm.1, type="bootstrap")}
 }
 \author{

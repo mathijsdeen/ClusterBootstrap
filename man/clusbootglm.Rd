@@ -49,7 +49,7 @@ Some useful methods for the obtained \code{clusbootglm} class object are \code{\
 \examples{
 \dontrun{
 data(opposites)
-clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)}
+clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)}
 }
 \author{
 Mathijs Deen, Mark de Rooij

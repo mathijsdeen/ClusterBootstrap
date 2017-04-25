@@ -25,7 +25,7 @@ Computes confidence intervals for one or more parameters in a fitted GLM with th
 \examples{
 \dontrun{
 data(opposites)
-cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 confint(cbglm.1,parm=c("Time","COG"), level=.90, type="BCa")}
 }
 \author{

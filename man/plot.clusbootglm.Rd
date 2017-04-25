@@ -22,7 +22,7 @@ Plots the estimates and their confidence intervals for an object of class \code{
 \examples{
 \dontrun{
 data(opposites)
-cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 plot(cbglm.1,interval.type="BCa")}
 }
 \author{

@@ -27,13 +27,13 @@
 #' @examples 
 #' \dontrun{
 #' data(opposites)
-#' clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)}
+#' clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)}
 #' @author Mathijs Deen, Mark de Rooij
 #' @import parallel
 #' @import stats
 #' @import utils
 #' @export
-clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.level=.95,no_cores=1){
+clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint.level=.95, no_cores=1){
   #checks
   tt_cores <- detectCores()
   if(no_cores>tt_cores) {
@@ -46,6 +46,8 @@ clusbootglm <- function(model, data, clusterid, family=gaussian,B=5000,confint.l
   n <- nrow(data) 
   p <- length(res.or$coef) 
   coefs <- matrix(NA, nrow = B, ncol = p)
+  arguments <- as.list(match.call())
+  clusterid <- eval(arguments$clusterid, data)
   cluster <- as.character(clusterid)
   clusters <- unique(cluster)
   Obsno <- split(1:n, cluster)

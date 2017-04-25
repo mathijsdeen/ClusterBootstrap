@@ -6,7 +6,7 @@
 #' @param ... other arguments.
 #' @examples \dontrun{
 #' data(opposites)
-#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 #' plot(cbglm.1,interval.type="BCa")}
 #' @import graphics
 #' @author Mathijs Deen
@@ -32,7 +32,7 @@ plot.clusbootglm<-function(x,interval.type="percentile",show.intercept=FALSE,...
 #' @author Mathijs Deen
 #' @examples \dontrun{
 #' data(opposites)
-#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 #' summary(cbglm.1, interval.type="percentile")}
 #' @export
 summary.clusbootglm<-function(object,interval.type="BCa",...){
@@ -60,7 +60,7 @@ summary.clusbootglm<-function(object,interval.type="BCa",...){
 #' @param ... other arguments.
 #' @examples \dontrun{
 #' data(opposites)
-#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 #' coef(cbglm.1, type="bootstrap")}
 #' @author Mathijs Deen
 #' @export
@@ -89,7 +89,7 @@ coef.clusbootglm<-function(object,type="bootstrap",...){
 #' @param ... other arguments.
 #' @examples \dontrun{
 #' data(opposites)
-#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)
+#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 #' confint(cbglm.1,parm=c("Time","COG"), level=.90, type="BCa")}
 #' @author Mathijs Deen
 #' @export

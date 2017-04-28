@@ -1,29 +1,3 @@
-#' @title Plot estimates and confidence intervals of cluster bootstrap GLM
-#' @description Plots the estimates and their confidence intervals for an object of class \code{clusbootglm}.
-#' @param x object of class \code{clusbootglm}.
-#' @param interval.type which confidence interval should be used. Choose \code{par} for parametric, \code{per} for percentile, or \code{BCa} for BCa interval.
-#' @param show.intercept plot estimate and confidence interval of the intercept.
-#' @param ... other arguments.
-#' @examples \dontrun{
-#' data(opposites)
-#' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
-#' plot(cbglm.1,interval.type="BCa")}
-#' @import graphics
-#' @author Mathijs Deen
-#' @export
-plot.clusbootglm<-function(x,interval.type="percentile",show.intercept=FALSE,...){
-  model <- x
-  if(interval.type=="percentile"){
-    cbglm_doplot(model$percentile.interval,model$boot.coefs,method="per",show.intercept)
-  }
-  if(interval.type=="parametric"){
-    cbglm_doplot(model$parametric.interval,model$boot.coefs,method="par",show.intercept)    
-  }
-  if(interval.type=="BCa"){
-    cbglm_doplot(model$BCa.interval,model$boot.coefs,method="BCa",show.intercept)
-  }
-}
-
 #' @title Summarize output of cluster bootstrap GLM
 #' @description Returns the summary of an object of class \code{clusbootglm}.
 #' @param object object of class \code{clusbootglm}.

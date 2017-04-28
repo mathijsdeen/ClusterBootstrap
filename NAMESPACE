@@ -2,11 +2,9 @@
 
 S3method(coef,clusbootglm)
 S3method(confint,clusbootglm)
-S3method(plot,clusbootglm)
 S3method(summary,clusbootglm)
 export(clusbootglm)
 export(clusbootsample)
-import(graphics)
 import(parallel)
 import(stats)
 import(utils)

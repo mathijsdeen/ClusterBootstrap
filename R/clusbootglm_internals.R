@@ -1,35 +1,3 @@
-cbglm_doplot<-function(ci_table,coefs,method,show.intercept){
-  if(method=="per") {
-      title <- "Percentile confidence intervals"
-  } else if(method=="par"){
-      title <- "Parametric confidence intervals"
-  } else if(method=="BCa"){
-      title <- "BCa confidence intervals"
-  } else {
-      title <- ""
-  }
-  ifelse(show.intercept==FALSE,begin<-2,begin<-1)
-  coefs <- coefs[begin:length(coefs)]
-  ci_table <- ci_table[begin:nrow(ci_table),]
-  dotchart(coefs, color="blue", pch="X", 
-           xlim=c(floor(min(ci_table[,1])/10)*10,
-                  ceiling(max(ci_table[,2])/10)*10),
-           main=title,labels=rownames(ci_table),xlab="Parameter estimate")
-  for (i in 1:nrow(ci_table)){
-    linetype <- ifelse(cbglm_signif_check(ci_table[i,])==1,1,2)
-    lines(x=c(ci_table[i,1],ci_table[i,2]), y=c(i,i),lty=linetype)
-    lines(x=c(0,0),y=c(0,nrow(ci_table)+1),lty=2)
-    points(x=c(ci_table[i,1],ci_table[i,1]), y=c(i,i), pch="|")
-    points(x=c(ci_table[i,2],ci_table[i,2]), y=c(i,i), pch="|")
-  }
-}
-
-cbglm_signif_check<-function(ci_row){
-  if(ci_row[1]<0 && ci_row[2]<0) return(1)
-  else if(ci_row[1]>0 && ci_row[2]>0) return(1)
-  else return(0)
-}
-
 clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data, p, res.or){
   j <- f[, i]
   obs <- unlist(Obsno[j])

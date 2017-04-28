@@ -9,5 +9,4 @@ devtools::install_github("mathijsdeen/ClusterBootstrap")
 The ClusterBootstrap package has dependencies on the following packages:
 * stats
 * utils
-* graphics
 * parallel

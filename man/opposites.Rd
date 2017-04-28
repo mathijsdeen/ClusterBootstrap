@@ -6,10 +6,10 @@
 \title{Opposites naming data}
 \format{the following variables are available:
 \itemize{
- \item Subject: subject indicator
- \item Time: a time variable ranging 0-3
- \item COG: cognitive skill, measured once (at time=0)
- \item SCORE: score on opposites naming task
+ \item \code{Subject}: subject indicator
+ \item \code{Time}: a time variable, ranging 0-3
+ \item \code{COG}: cognitive skill, measured once (at time=0)
+ \item \code{SCORE}: score on opposites naming task
 }}
 \usage{
 opposites
@@ -27,7 +27,7 @@ Willett (2003) within 36 individuals.
 \itemize{
   \item Willett, J.B. (1988). Questions and answers in the measurement of change. In: E. Rothkopf (Ed.), 
   \emph{Review of research in education (1988-89)} (pp. 345-422). Washington, DC: American Educational Research Association.
-  \item Singer, J.D., & Willett (2003). \emph{Applied longitudinal data analysis. Modeling change and event occurence.} 
+  \item Singer, J.D., & Willett, J.B. (2003). \emph{Applied longitudinal data analysis. Modeling change and event occurence.} 
   NY: Oxford University Press, Inc.
  }
 }

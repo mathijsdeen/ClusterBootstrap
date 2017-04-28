@@ -5,3 +5,6 @@
 .Rhistory
 .Rbuildignore
 ClusterBootstrap.Rproj
+testing.R
+make_pdf.R
+plot_functions.R

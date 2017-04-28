@@ -2,19 +2,19 @@
 % Please edit documentation in R/clusbootglm.R
 \name{clusbootglm}
 \alias{clusbootglm}
-\title{Fit (generalized) linear models with the cluster bootstrap}
+\title{Fit generalized linear models with the cluster bootstrap}
 \usage{
 clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
   confint.level = 0.95, no_cores = 1)
 }
 \arguments{
-\item{model}{(generalized) linear model to be fitted with the cluster bootstrap.}
+\item{model}{generalized linear model to be fitted with the cluster bootstrap.}
 
 \item{data}{dataframe that contains the data.}
 
 \item{clusterid}{variable in data that identifies the clusters.}
 
-\item{family}{currently, only Gaussian is supported.}
+\item{family}{error distribution to be used in the model, e.g. \code{gaussian} or \code{binomial}.}
 
 \item{B}{number of bootstrap samples.}
 
@@ -23,26 +23,33 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 \item{no_cores}{number of CPU cores to be used.}
 }
 \value{
-\code{clusbootglm} produces an object of class \code{"clusboot"}, containing the following relevant components:
+\code{clusbootglm} produces an object of class \code{"clusbootglm"}, containing the following relevant components:
 \item{coefficients}{A matrix of \code{B} rows, containing the parameter estimates for all bootstrap samples.}
+\item{bootstrap.matrix}{n*B matrix, of which each column represents a bootstrap sample; each value in a column represents 
+                        a unit of \code{subjectid}.}
 \item{lm.coefs}{Parameter estimates from a single (generalized) linear model.}
 \item{boot.coefs}{Mean values of the paramater estimates, derived from the bootstrap coefficients.}
 \item{boot.sds}{Standard deviations of cluster bootstrap parameter estimates.}
 \item{ci.level}{User defined confidence interval level.}
 \item{percentile.interval}{Confidence interval based on percentiles, given the user defined confidence interval level.}
-\item{parametric.interval}{Confidence interval based on \code{lm.coefs} and column standard deviations of \code{coefficients}, given the user defined confidence interval level.}
-\item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined confidence interval level.}
+\item{parametric.interval}{Confidence interval based on \code{lm.coefs} and column standard deviations of \code{coefficients}, 
+                           given the user defined confidence interval level.}
+\item{BCa.interval}{Confidence interval based on percentiles with bias correction and acceleration, given the user defined 
+                    confidence interval level.}
+\item{samples.with.NA.coef}{Cluster bootstrap sample numbers with at least one coefficient being \code{NA}.}
+\item{failed.bootstrap.samples}{For each of the coefficients, the number of failed bootstrap samples are given.}
 }
 \description{
-Perform a (generalized) linear model with the cluster bootstrap for analysis of clustered data.
+Fit a generalized linear model with the cluster bootstrap for analysis of clustered data.
 }
 \details{
-Some useful methods for the obtained \code{clusboot} class object are \code{\link{summary.clusboot}}, \code{\link{coef.clusboot}} and \code{\link{plot.clusboot}}.
+Some useful methods for the obtained \code{clusbootglm} class object are \code{\link{summary.clusbootglm}}, 
+         \code{\link{coef.clusbootglm}}, \code{\link{plot.clusbootglm}}, \code{\link{clusbootmatrix}} and \code{\link{clusbootsample}}.
 }
 \examples{
 \dontrun{
 data(opposites)
-clusbootglm(SCORE~Time*COG,data=opposites,clusterid=opposites$Subject)}
+clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)}
 }
 \author{
 Mathijs Deen, Mark de Rooij

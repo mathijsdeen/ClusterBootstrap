@@ -15,7 +15,7 @@ Depends:
     utils,
     graphics,
     parallel
-License: GPL-3 | file LICENSE
+License: GPL-3
 URL: https://github.com/mathijsdeen/ClusterBootstrap
 BugReport: https://github.com/mathijsdeen/ClusterBootstrap/issues
 LazyData: true

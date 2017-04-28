@@ -8,3 +8,7 @@ ClusterBootstrap.Rproj
 testing.R
 make_pdf.R
 plot_functions.R
+vignette.pdf
+vignette.tex
+vignette_files
+vignette.Rmd

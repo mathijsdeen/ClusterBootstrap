@@ -23,7 +23,7 @@
 #' \item{samples.with.NA.coef}{Cluster bootstrap sample numbers with at least one coefficient being \code{NA}.}
 #' \item{failed.bootstrap.samples}{For each of the coefficients, the number of failed bootstrap samples are given.}
 #' @details Some useful methods for the obtained \code{clusbootglm} class object are \code{\link{summary.clusbootglm}}, 
-#'          \code{\link{coef.clusbootglm}}, \code{\link{plot.clusbootglm}}, \code{\link{clusbootmatrix}} and \code{\link{clusbootsample}}.
+#'          \code{\link{coef.clusbootglm}}, and \code{\link{clusbootsample}}.
 #' @examples 
 #' \dontrun{
 #' data(opposites)
@@ -83,7 +83,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
   }
   #post processing
   invalid.samples <- colSums(is.na(coefs))
-  names(invalid.samples) <- names(res.or$coef)
+  names(invalid.samples) <- colnames(coefs) <- names(res.or$coef)
   samples.with.NA.coef <- which(is.na(rowSums(coefs)))
   sdcoefs <- apply(coefs, 2, sd, na.rm = TRUE)
   #confidence intervals:

@@ -44,7 +44,7 @@ Fit a generalized linear model with the cluster bootstrap for analysis of cluste
 }
 \details{
 Some useful methods for the obtained \code{clusbootglm} class object are \code{\link{summary.clusbootglm}}, 
-         \code{\link{coef.clusbootglm}}, \code{\link{plot.clusbootglm}}, \code{\link{clusbootmatrix}} and \code{\link{clusbootsample}}.
+         \code{\link{coef.clusbootglm}}, and \code{\link{clusbootsample}}.
 }
 \examples{
 \dontrun{

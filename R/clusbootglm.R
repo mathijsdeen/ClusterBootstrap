@@ -83,7 +83,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
   }
   #post processing
   invalid.samples <- colSums(is.na(coefs))
-  names(invalid.samples) <- names(coefs) <- names(res.or$coef)
+  names(invalid.samples) <- colnames(coefs) <- names(res.or$coef)
   samples.with.NA.coef <- which(is.na(rowSums(coefs)))
   sdcoefs <- apply(coefs, 2, sd, na.rm = TRUE)
   #confidence intervals:

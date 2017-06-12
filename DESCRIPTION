@@ -7,8 +7,7 @@ Authors@R: c(person(given = "Mathijs", family = "Deen",
                     email = "m.l.deen@fsw.leidenuniv.nl"),
              person(given = "Mark", family = "de Rooij",
                     role = "aut"))
-Description: The ClusterBootstrap package provides functionality for the
-    analysis of clustered data using the cluster bootstrap. 
+Description: Provides functionality for the analysis of clustered data using the cluster bootstrap. 
 Depends:
     R (>= 3.0),
     stats,
@@ -17,7 +16,7 @@ Depends:
     parallel
 License: GPL-3
 URL: https://github.com/mathijsdeen/ClusterBootstrap
-BugReport: https://github.com/mathijsdeen/ClusterBootstrap/issues
+BugReports: https://github.com/mathijsdeen/ClusterBootstrap/issues
 Maintainer: Mathijs Deen <m.l.deen@fsw.leidenuniv.nl>
 LazyData: true
 RoxygenNote: 6.0.1

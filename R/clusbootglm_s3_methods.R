@@ -2,7 +2,6 @@
 #' @description Returns the summary of an object of class \code{clusbootglm}.
 #' @param object object of class \code{clusbootglm}.
 #' @param interval.type which confidence interval should be used. Options are \code{parametric}, \code{percentile}, and \code{BCa} intervals.
-#' @param estimate.type type of parameter estimate to be reported. Options are \code{bootstrap} (default) for the mean values in the bootstrap samples, and \code{GLM} for estimates from a GLM on the original data.
 #' @param ... other arguments.
 #' @author Mathijs Deen
 #' @examples \dontrun{
@@ -10,20 +9,15 @@
 #' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
 #' summary(cbglm.1, interval.type="percentile")}
 #' @export
-summary.clusbootglm<-function(object,interval.type="BCa",estimate.type="bootstrap",...){
+summary.clusbootglm<-function(object,interval.type="BCa",...){
   model <- object
   ci.boundaries <- c((1-model$ci.level)/2,1-(1-model$ci.level)/2)
   cat(sprintf("\nCall:\n"))
   print(model$call)
   cat(sprintf("\n"))
   ifelse(interval.type=="BCa", confinttab <- model$BCa.interval, ifelse(interval.type=="parametric", confinttab <- model$parametric.interval, confinttab <- model$percentile.interval))
-  if(estimate.type=="GLM"){
-    tabel <- cbind(model$lm.coefs,model$boot.sds,confinttab)
-    dimnames(tabel)[[2]]<-c('Est. (GLM)','SE (Bootstrap)',sprintf('CI %.1f%%',100*ci.boundaries[1]),sprintf('CI %.1f%%',100*ci.boundaries[2]))
-  }else{
-    tabel <- cbind(model$boot.coefs,model$boot.sds,confinttab)
-    dimnames(tabel)[[2]]<-c('Est. (Bootstrap)','SE (Bootstrap)',sprintf('CI %.1f%%',100*ci.boundaries[1]),sprintf('CI %.1f%%',100*ci.boundaries[2]))
-  }
+  tabel <- cbind(model$lm.coefs,model$boot.sds,confinttab)
+  dimnames(tabel)[[2]]<-c('Est. (GLM)','SE (Bootstrap)',sprintf('CI %.1f%%',100*ci.boundaries[1]),sprintf('CI %.1f%%',100*ci.boundaries[2]))
   print(tabel)
   cat(sprintf("---\n"))
   cat(paste(100*model$ci.level,"% confidence interval using ", ifelse(interval.type=="BCa", "bias corrected and accelerated", ifelse(interval.type=="parametric", "parametric", "percentile")), " cluster bootstrap intervals", sep=""))

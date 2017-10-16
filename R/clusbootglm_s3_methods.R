@@ -30,24 +30,24 @@ summary.clusbootglm<-function(object,interval.type="BCa",...){
 #' @title Obtain coefficients from cluster bootstrap object
 #' @description Returns the coefficients of an object of class \code{clusbootglm}.
 #' @param object object of class \code{clusbootglm}.
-#' @param type type of coefficient (\code{bootstrap} or \code{GLM}).
+#' @param estimate.type type of coefficient (\code{bootstrap} or \code{GLM}).
 #' @param ... other arguments.
 #' @examples \dontrun{
 #' data(opposites)
 #' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
-#' coef(cbglm.1, type="bootstrap")}
+#' coef(cbglm.1, estimate.type="bootstrap")}
 #' @author Mathijs Deen
 #' @export
-coef.clusbootglm<-function(object,type="bootstrap",...){
+coef.clusbootglm<-function(object,estimate.type="bootstrap",...){
   model <- object
-  if(type=="bootstrap"){
+  if(estimate.type=="bootstrap"){
     coeftable <- cbind(model$boot.coefs)
     colnames(coeftable)<-'bootstrap'
-  } else if(type=="GLM"){
+  } else if(estimate.type=="GLM"){
     coeftable <- cbind(model$lm.coefs)
     colnames(coeftable)<-"GLM"
   } else {
-    stop("type must be 'bootstrap' or 'GLM'",call.=FALSE)
+    stop("estimate.type must be 'bootstrap' or 'GLM'",call.=FALSE)
   }
   rownames(coeftable)<-rownames(model$parametric.interval)
   return(coeftable)
@@ -59,15 +59,15 @@ coef.clusbootglm<-function(object,type="bootstrap",...){
 #' @param parm a specification of which parameters are to be given confidence intervals, either a vector of numbers 
 #' or a vector of names. Defaults to all parameters.
 #' @param level the required confidence level
-#' @param type type of confidence level. Options are \code{percentile}, \code{parametric} and \code{BCa}.
+#' @param interval.type type of confidence level. Options are \code{percentile}, \code{parametric} and \code{BCa}.
 #' @param ... other arguments.
 #' @examples \dontrun{
 #' data(opposites)
 #' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
-#' confint(cbglm.1,parm=c("Time","COG"), level=.90, type="BCa")}
+#' confint(cbglm.1,parm=c("Time","COG"), level=.90, interval.type="BCa")}
 #' @author Mathijs Deen
 #' @export
-confint.clusbootglm<-function(object,parm="all",level=0.95,type="percentile",...){
+confint.clusbootglm<-function(object,parm="all",level=0.95,interval.type="percentile",...){
   confint.pboundaries <- c((1-level)/2,1-(1-level)/2)
   confint.Zboundaries <- qnorm(confint.pboundaries)
   sdcoefs <- apply(object$coefficients, 2, sd, na.rm=T)
@@ -76,9 +76,9 @@ confint.clusbootglm<-function(object,parm="all",level=0.95,type="percentile",...
   ci_parametric <- confint_parametric(sdcoefs,res.or.coef,confint.Zboundaries)
   cnames <- dimnames(ci_percentile)[[2]]
   rnames <- dimnames(ci_parametric)[[1]]
-  if(type=="percentile") ci_out <- ci_percentile
-  else if(type=="parametric") ci_out <- ci_parametric
-  else if(type=="BCa"){
+  if(interval.type=="percentile") ci_out <- ci_percentile
+  else if(interval.type=="parametric") ci_out <- ci_parametric
+  else if(interval.type=="BCa"){
     ci_out <- with(object,confint_BCa(B,failed.bootstrap.samples,model,data,subject.vector,
                                       family,coefficients,lm.coefs,length(lm.coefs),confint.Zboundaries))
   }

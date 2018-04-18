@@ -47,6 +47,7 @@ coef.clusbootglm<-function(object,estimate.type="bootstrap",...){
     coeftable <- cbind(model$lm.coefs)
     colnames(coeftable)<-"GLM"
   } else {
+    options(error=NULL)
     stop("estimate.type must be 'bootstrap' or 'GLM'",call.=FALSE)
   }
   rownames(coeftable)<-rownames(model$parametric.interval)
@@ -59,15 +60,19 @@ coef.clusbootglm<-function(object,estimate.type="bootstrap",...){
 #' @param parm a specification of which parameters are to be given confidence intervals, either a vector of numbers 
 #' or a vector of names. Defaults to all parameters.
 #' @param level the required confidence level
-#' @param interval.type type of confidence level. Options are \code{percentile}, \code{parametric} and \code{BCa}.
+#' @param interval.type type of confidence level. Options are \code{BCa}, \code{percentile}, and \code{parametric}.
 #' @param ... other arguments.
 #' @examples \dontrun{
 #' data(opposites)
 #' cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
-#' confint(cbglm.1,parm=c("Time","COG"), level=.90, interval.type="BCa")}
+#' confint(cbglm.1,parm=c("Time","COG"), level=.90, interval.type="percentile")}
 #' @author Mathijs Deen
 #' @export
-confint.clusbootglm<-function(object,parm="all",level=0.95,interval.type="percentile",...){
+confint.clusbootglm<-function(object,parm="all",level=0.95,interval.type="BCa",...){
+  if(level < 0 | level > 1){ 
+    options(error=NULL) 
+    stop("'level' should be between 0 and 1 (e.g., 0.9 for a 90% confidence interval)", call.=FALSE)
+  }
   confint.pboundaries <- c((1-level)/2,1-(1-level)/2)
   confint.Zboundaries <- qnorm(confint.pboundaries)
   sdcoefs <- apply(object$coefficients, 2, sd, na.rm=T)
@@ -81,6 +86,9 @@ confint.clusbootglm<-function(object,parm="all",level=0.95,interval.type="percen
   else if(interval.type=="BCa"){
     ci_out <- with(object,confint_BCa(B,failed.bootstrap.samples,model,data,subject.vector,
                                       family,coefficients,lm.coefs,length(lm.coefs),confint.Zboundaries))
+  } else {
+    options(error=NULL)
+    stop("interval.type must be 'BCa', percentile', or 'parametric'",call.=FALSE)
   }
   rownames(ci_out) <- rnames
   colnames(ci_out) <- cnames

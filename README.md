@@ -6,6 +6,9 @@ ClusterBootstrap is an R package that provides functionality for performing (gen
 #install.packages("devtools")
 devtools::install_github("mathijsdeen/ClusterBootstrap")
 ```
+
+The latest stable release can also be downloaded from the Comprehensive R Archive Network (CRAN), at https://cran.r-project.org/package=ClusterBootstrap.
+
 The ClusterBootstrap package has dependencies on the following packages:
 * stats
 * utils

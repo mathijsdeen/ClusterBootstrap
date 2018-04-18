@@ -5,7 +5,7 @@
 \title{Fit generalized linear models with the cluster bootstrap}
 \usage{
 clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
-  confint.level = 0.95, no_cores = 1)
+  confint.level = 0.95, n.cores = 1)
 }
 \arguments{
 \item{model}{generalized linear model to be fitted with the cluster bootstrap.}
@@ -20,7 +20,7 @@ clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
 
 \item{confint.level}{level of confidence interval.}
 
-\item{no_cores}{number of CPU cores to be used.}
+\item{n.cores}{number of CPU cores to be used.}
 }
 \value{
 \code{clusbootglm} produces an object of class \code{"clusbootglm"}, containing the following relevant components:

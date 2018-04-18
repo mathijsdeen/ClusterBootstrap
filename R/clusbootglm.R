@@ -6,7 +6,7 @@
 #' @param family error distribution to be used in the model, e.g. \code{gaussian} or \code{binomial}.
 #' @param B number of bootstrap samples.
 #' @param confint.level level of confidence interval.
-#' @param no_cores number of CPU cores to be used.
+#' @param n.cores number of CPU cores to be used.
 #' @return \code{clusbootglm} produces an object of class \code{"clusbootglm"}, containing the following relevant components:
 #' \item{coefficients}{A matrix of \code{B} rows, containing the parameter estimates for all bootstrap samples.}
 #' \item{bootstrap.matrix}{n*B matrix, of which each column represents a bootstrap sample; each value in a column represents 
@@ -33,11 +33,11 @@
 #' @import stats
 #' @import utils
 #' @export
-clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint.level=.95, no_cores=1){
+clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint.level=.95, n.cores=1){
   #checks
   tt_cores <- detectCores()
-  if(no_cores>tt_cores) {
-    message(sprintf("Note: \"no_cores\" was set to %d, but only %d are available. Using all cores.",no_cores,tt_cores))
+  if(n.cores>tt_cores) {
+    message(sprintf("Note: \"n.cores\" was set to %d, but only %d are available. Using all cores.",n.cores,tt_cores))
   }
   #setup
   res.or <- glm(model,family=family, data = data)
@@ -56,9 +56,9 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
   fff = sample(ff)
   f = matrix(fff,length(clusters),B)
   #resampling
-  if(is.numeric(no_cores) & no_cores > 0){
+  if(is.numeric(n.cores) & n.cores > 0){
     #serial:
-    if(no_cores==1){
+    if(n.cores==1){
       for (i in 1:B) {
         j <- f[,i]
         obs <- unlist(Obsno[j])
@@ -68,8 +68,8 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
       }
     }
     #parallel:
-    if(no_cores>1){
-      cl <- makeCluster(max(min(no_cores,tt_cores,2))) 
+    if(n.cores>1){
+      cl <- makeCluster(max(min(n.cores,tt_cores,2))) 
       previous_RNGkind <- RNGkind()[1]
       RNGkind("L'Ecuyer-CMRG")
       nextRNGStream(.Random.seed)

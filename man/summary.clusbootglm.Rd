@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{object of class \code{clusbootglm}.}
 
-\item{interval.type}{which confidence interval should be used. Options are \code{parametric}, \code{percentile} and \code{BCa} intervals.}
+\item{interval.type}{which confidence interval should be used. Options are \code{parametric}, \code{percentile}, and \code{BCa} intervals.}
 
 \item{...}{other arguments.}
 }

@@ -5,7 +5,7 @@
 \title{Confidence intervals for cluster bootstrap model parameters}
 \usage{
 \method{confint}{clusbootglm}(object, parm = "all", level = 0.95,
-  type = "percentile", ...)
+  interval.type = "BCa", ...)
 }
 \arguments{
 \item{object}{object of class \code{clusbootglm}.}
@@ -15,7 +15,7 @@ or a vector of names. Defaults to all parameters.}
 
 \item{level}{the required confidence level}
 
-\item{type}{type of confidence level. Options are \code{percentile}, \code{parametric} and \code{BCa}.}
+\item{interval.type}{type of confidence level. Options are \code{BCa}, \code{percentile}, and \code{parametric}.}
 
 \item{...}{other arguments.}
 }
@@ -26,7 +26,7 @@ Computes confidence intervals for one or more parameters in a fitted GLM with th
 \dontrun{
 data(opposites)
 cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
-confint(cbglm.1,parm=c("Time","COG"), level=.90, type="BCa")}
+confint(cbglm.1,parm=c("Time","COG"), level=.90, interval.type="percentile")}
 }
 \author{
 Mathijs Deen

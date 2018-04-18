@@ -4,12 +4,12 @@
 \alias{coef.clusbootglm}
 \title{Obtain coefficients from cluster bootstrap object}
 \usage{
-\method{coef}{clusbootglm}(object, type = "bootstrap", ...)
+\method{coef}{clusbootglm}(object, estimate.type = "bootstrap", ...)
 }
 \arguments{
 \item{object}{object of class \code{clusbootglm}.}
 
-\item{type}{type of coefficient (\code{bootstrap} or \code{GLM}).}
+\item{estimate.type}{type of coefficient (\code{bootstrap} or \code{GLM}).}
 
 \item{...}{other arguments.}
 }
@@ -20,7 +20,7 @@ Returns the coefficients of an object of class \code{clusbootglm}.
 \dontrun{
 data(opposites)
 cbglm.1 <- clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)
-coef(cbglm.1, type="bootstrap")}
+coef(cbglm.1, estimate.type="bootstrap")}
 }
 \author{
 Mathijs Deen

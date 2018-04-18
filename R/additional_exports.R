@@ -10,7 +10,10 @@
 #' @export
 clusbootsample <- function(object, samplenr){
   objname <- match.call()$object
-  if(!class(object)=="clusbootglm") stop(paste("'",objname,"' is not a clusbootglm class object", sep=""), call.=F)
+  if(!class(object)=="clusbootglm"){
+    options(error=NULL)
+    stop(paste("'",objname,"' is not a clusbootglm class object", sep=""), call.=F)
+  }
   cluster <- as.character(object$subject.vector)
   clusters <- unique(cluster)
   Obsno <- split(1:nrow(object$data), cluster)

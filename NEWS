@@ -1,0 +1,12 @@
+Changes in Version 0.9.9 (2018-04-18)
+=====================================
+
+  * Renamed some function arguments for consistency, clarity and aesthetic reasons
+  
+  * Added medication dataset from the accompanied website of Singer & Willett (2003)
+  
+  * Removed redundant bootstrap estimates from summary.clusbootglm()
+  
+  * Added and prettified some error handlings
+  
+  * Changed confint() interval.type argument default to match the one from summary() (BCa interval)

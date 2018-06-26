@@ -4,10 +4,13 @@
 \alias{summary.clusbootglm}
 \title{Summarize output of cluster bootstrap GLM}
 \usage{
-\method{summary}{clusbootglm}(object, interval.type = "BCa", ...)
+\method{summary}{clusbootglm}(object, estimate.type = "bootstrap",
+  interval.type = "BCa", ...)
 }
 \arguments{
 \item{object}{object of class \code{clusbootglm}.}
+
+\item{estimate.type}{specify which type of estimate should be returned, either bootstrap means (default) or GLM estimates from model fitted on original data.}
 
 \item{interval.type}{which confidence interval should be used. Options are \code{parametric}, \code{percentile}, and \code{BCa} intervals.}
 

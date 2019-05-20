@@ -8,7 +8,7 @@
 #' @format the following variables are available:
 #' \itemize{
 #'  \item \code{id}: subject indicator
-#'  \item \code{treatment}: either placebo (0) or antidepressant (1)
+#'  \item \code{treat}: either placebo (0) or antidepressant (1)
 #'  \item \code{time}: number of days since trial start. 
 #'  \item \code{pos}: positive affect. Higher scores indicate a more positive mood.
 #' }

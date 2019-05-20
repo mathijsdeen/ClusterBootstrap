@@ -14,7 +14,7 @@ Depends:
     utils,
     graphics,
     parallel
-License: GPL-3 + file LICENSE
+License: GPL-3 | file LICENSE
 URL: https://github.com/mathijsdeen/ClusterBootstrap
 BugReports: https://github.com/mathijsdeen/ClusterBootstrap/issues
 Maintainer: Mathijs Deen <m.l.deen@fsw.leidenuniv.nl>

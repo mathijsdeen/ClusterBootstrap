@@ -4,8 +4,7 @@
 \alias{confint.clusbootglm}
 \title{Confidence intervals for cluster bootstrap model parameters}
 \usage{
-\method{confint}{clusbootglm}(object, parm = "all", level = 0.95,
-  interval.type = "BCa", ...)
+\method{confint}{clusbootglm}(object, parm = "all", level = 0.95, interval.type = "BCa", ...)
 }
 \arguments{
 \item{object}{object of class \code{clusbootglm}.}

@@ -4,8 +4,15 @@
 \alias{clusbootglm}
 \title{Fit generalized linear models with the cluster bootstrap}
 \usage{
-clusbootglm(model, data, clusterid, family = gaussian, B = 5000,
-  confint.level = 0.95, n.cores = 1)
+clusbootglm(
+  model,
+  data,
+  clusterid,
+  family = gaussian,
+  B = 5000,
+  confint.level = 0.95,
+  n.cores = 1
+)
 }
 \arguments{
 \item{model}{generalized linear model to be fitted with the cluster bootstrap.}

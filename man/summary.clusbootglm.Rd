@@ -4,8 +4,7 @@
 \alias{summary.clusbootglm}
 \title{Summarize output of cluster bootstrap GLM}
 \usage{
-\method{summary}{clusbootglm}(object, estimate.type = "bootstrap",
-  interval.type = "BCa", ...)
+\method{summary}{clusbootglm}(object, estimate.type = "bootstrap", interval.type = "BCa", ...)
 }
 \arguments{
 \item{object}{object of class \code{clusbootglm}.}

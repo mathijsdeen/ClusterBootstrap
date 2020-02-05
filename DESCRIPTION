@@ -1,7 +1,7 @@
 Package: ClusterBootstrap
 Title: Analyze Clustered Data with Generalized Linear Models using the Cluster Bootstrap
-Date: 2019-05-20
-Version: 1.0.1
+Date: 2020-02-05
+Version: 1.1
 Authors@R: c(person(given = "Mathijs", family = "Deen",
                     role  = c("aut", "cre"),
                     email = "m.l.deen@fsw.leidenuniv.nl"),
@@ -19,4 +19,5 @@ URL: https://github.com/mathijsdeen/ClusterBootstrap
 BugReports: https://github.com/mathijsdeen/ClusterBootstrap/issues
 Maintainer: Mathijs Deen <m.l.deen@fsw.leidenuniv.nl>
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 7.0.2
+Encoding: UTF-8

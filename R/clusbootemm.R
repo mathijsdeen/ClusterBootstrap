@@ -12,10 +12,10 @@
 #' medication <- medication[medication$time %% 1 == 0 & medication$time <=4,]
 #' set.seed(1)
 #' model.1 <- clusbootglm(pos~treat*time,data=medication,clusterid=id, B=5000)
-#' emm_model.1 <- emmeans.clusbootglm(model.1, ~treat*time)
+#' emm_model.1 <- emm(model.1, ~treat*time)
 #' summary(emm_model.1)}
 #' @export
-emmeans.clusbootglm <- function(object, specs, confint.level=.95){
+emm <- function(object, specs, confint.level=.95){
   vars <- all.vars(specs)
   confint.pboundaries <- c((1-confint.level)/2,1-(1-confint.level)/2)
   xs <- unique(model.matrix(specs, data=object$data))
@@ -33,9 +33,10 @@ emmeans.clusbootglm <- function(object, specs, confint.level=.95){
   invisible(outlist)
 }
 
-#' @title Summarize estimated marginal means for cluster bootstrap GLM
+#' @title Summarize estimated marginal means for cluster bootstrap GLM into a grid
 #' @description Returns the summary of the EMM for a \code{clusbootglm} class object.
 #' @param object object of class \code{clusbootemm}.
+#' @param ... other arguments.
 #' @author Mathijs Deen
 #' @examples \dontrun{
 #' medication <- medication[medication$time %% 1 == 0 & medication$time <=4,]
@@ -44,15 +45,15 @@ emmeans.clusbootglm <- function(object, specs, confint.level=.95){
 #' emm_model.1 <- emmeans.clusbootglm(model.1, ~treat*time)
 #' summary(emm_model.1)}
 #' @export
-summary.clusbootemm <- function(object){
+summary.clusbootemm <- function(object,...){
   print(object$grid)
 }
 
-#' @title Plot estimated marginal means for a cluster bootstrap GLM
+#' @title Plot estimated marginal means for a cluster bootstrap GLM into a plot
 #' @description Plots the estimated marginal means of an \code{clusbootglm} object. Works with one within-subjects and/or one between-subjects variable.
-#' @param object object of class \code{clusbootemm}.
-#' @param within within-subjects variable
-#' @param between between-subjects variable
+#' @param x object of class \code{clusbootemm}.
+#' @param within within-subjects variable.
+#' @param between between-subjects variable.
 #' @param pch point character. Length must be equal to the number of between-subjects levels.
 #' @param lty linetype. Length must be equal to the number of between-subjects levels.
 #' @param ylab label for y-axis.
@@ -67,7 +68,8 @@ summary.clusbootemm <- function(object){
 #' summary(emm_model.1)
 #' plot.clusbootemm(emm_model.1, time, between=treat, pch=c(15,17), lty=c(1,2))}
 #' @export
-plot.clusbootemm <- function(object, within, between, pch, lty,ylab="Estimated marginal mean", xlab="Within subject", ...){
+plot.clusbootemm <- function(x, within, between, pch, lty, ylab="Estimated marginal mean", xlab="Within subject", ...){
+  object <- x
   arguments <- as.list(match.call())
   grid <- object$grid
   within <- eval(arguments$within, grid)

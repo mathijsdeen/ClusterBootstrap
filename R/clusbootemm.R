@@ -2,35 +2,38 @@
 #' @description Returns the estimated marginal means of an \code{clusbootglm} object.
 #' This function works with a maximum of one between-subjects and one within-subjects variable.
 #' @param object object of class \code{clusbootglm}.
-#' @param specs formula specifying the model matrix for the EMM. 
 #' @param confint.level level of the confidence interval.
 #' @return \code{emmeans} returns an object of class \code{clusbootemm}, containing the following components:
 #' \item{grid}{Grid with estimated marginal means for each combination of levels of the variables.}
-#' \item{B.emm}{p*B matrix, with p being the number of estimates and B being the number of bootstrap samples.}
+#' \item{bootstrapsample.emm}{p*B matrix, with p being the number of estimates and B being the number of bootstrap samples.}
 #' @author Mathijs Deen
 #' @examples \dontrun{
 #' medication <- medication[medication$time %% 1 == 0 & medication$time <=4,]
 #' set.seed(1)
 #' model.1 <- clusbootglm(pos~treat*time,data=medication,clusterid=id, B=5000)
-#' emm_model.1 <- emm(model.1, ~treat*time)
+#' emm_model.1 <- emm(model.1)
 #' summary(emm_model.1)}
 #' @export
-emm <- function(object, specs, confint.level=.95){
+emm <- function(object, confint.level=.95){
+  specs <- object$model[-2]
   vars <- all.vars(specs)
   confint.pboundaries <- c((1-confint.level)/2,1-(1-confint.level)/2)
   xs <- unique(model.matrix(specs, data=object$data))
   Bs <- t(object$coefficients[drop=FALSE])
+  Bs[, 1:10]
   B.emm <- xs %*% Bs
-  #this should work in cases of factor and numeric within and/or between vars:
+  B.emm[, 1:10]
   outvars <- data.frame(unique(object$data[,which(names(object$data) %in% vars)]))
-  colnames(outvars) <- vars
+  outvars
+  if(length(vars)==1) colnames(outvars) <- vars
   emm <- data.frame(t(rbind(apply(B.emm, 1, mean),
                             apply(B.emm,1,quantile,probs=confint.pboundaries))))
+  emm
   names(emm) <- c("emmean","lower.CL","upper.CL")
   out <- data.frame(outvars,emm)
-  outlist <- list("grid"=out, B.emm)
+  outlist <- list(bootstrapsample.emm=B.emm, grid=out)
   class(outlist) <- "clusbootemm"
-  invisible(outlist)
+  return(outlist)
 }
 
 #' @title Summarize estimated marginal means for cluster bootstrap GLM into a grid

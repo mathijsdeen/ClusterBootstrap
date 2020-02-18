@@ -20,17 +20,15 @@ emm <- function(object, confint.level=.95){
   confint.pboundaries <- c((1-confint.level)/2,1-(1-confint.level)/2)
   xs <- unique(model.matrix(specs, data=object$data))
   Bs <- t(object$coefficients[drop=FALSE])
-  Bs[, 1:10]
   B.emm <- xs %*% Bs
-  B.emm[, 1:10]
   outvars <- data.frame(unique(object$data[,which(names(object$data) %in% vars)]))
-  outvars
-  if(length(vars)==1) colnames(outvars) <- vars
   emm <- data.frame(t(rbind(apply(B.emm, 1, mean),
                             apply(B.emm,1,quantile,probs=confint.pboundaries))))
-  emm
   names(emm) <- c("emmean","lower.CL","upper.CL")
-  out <- data.frame(outvars,emm)
+  out <- na.omit(data.frame(outvars,emm)[order(outvars),])
+  if(length(vars)==1) out <- out[order(out[,1]),]
+  if(length(vars)==2) out <- out[order(out[,1],out[,2]),]
+  if(length(vars)==1) colnames(out)[1] <- vars
   outlist <- list(bootstrapsample.emm=B.emm, grid=out)
   class(outlist) <- "clusbootemm"
   return(outlist)

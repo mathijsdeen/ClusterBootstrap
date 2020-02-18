@@ -4,19 +4,17 @@
 \alias{emm}
 \title{Calculate estimated marginal means for a cluster bootstrap GLM}
 \usage{
-emm(object, specs, confint.level = 0.95)
+emm(object, confint.level = 0.95)
 }
 \arguments{
 \item{object}{object of class \code{clusbootglm}.}
-
-\item{specs}{formula specifying the model matrix for the EMM.}
 
 \item{confint.level}{level of the confidence interval.}
 }
 \value{
 \code{emmeans} returns an object of class \code{clusbootemm}, containing the following components:
 \item{grid}{Grid with estimated marginal means for each combination of levels of the variables.}
-\item{B.emm}{p*B matrix, with p being the number of estimates and B being the number of bootstrap samples.}
+\item{bootstrapsample.emm}{p*B matrix, with p being the number of estimates and B being the number of bootstrap samples.}
 }
 \description{
 Returns the estimated marginal means of an \code{clusbootglm} object.
@@ -27,7 +25,7 @@ This function works with a maximum of one between-subjects and one within-subjec
 medication <- medication[medication$time \%\% 1 == 0 & medication$time <=4,]
 set.seed(1)
 model.1 <- clusbootglm(pos~treat*time,data=medication,clusterid=id, B=5000)
-emm_model.1 <- emm(model.1, ~treat*time)
+emm_model.1 <- emm(model.1)
 summary(emm_model.1)}
 }
 \author{

@@ -1,3 +1,11 @@
+Changes in Version 1.1.0 (2020-02-20)
+=====================================
+
+  * Added functionality to calculate estimated marginal means
+
+  * Added permutation test
+  
+
 Changes in Version 1.0.0 (2018-06-26)
 =====================================
 

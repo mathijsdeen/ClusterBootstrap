@@ -89,9 +89,9 @@ plot.clusbootptest <- function(x, pcol="red", pty=1, mfrow=c(1,1), ...){
   par(mfrow=mfrow)
   for(i in 1:nplots){
     hist(vals[i,], 
-         main=sprintf("Permutation distribution at %s = %d \n (p = %s)",
+         main=sprintf("Permutation distribution at %s = %s \n (p = %s)",
                       names(object$pvalues)[1], 
-                      object$pvalues[i,1], 
+                      prettyNum(object$pvalues[i,1],digits=3), 
                       substr(object$pvalues[i,2], 2, min(5,nchar(as.character(object$pvalues[i,2]))))), 
          xlab="Welch t-statistic",
          ...)

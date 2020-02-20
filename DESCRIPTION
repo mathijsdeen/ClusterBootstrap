@@ -13,7 +13,9 @@ Depends:
     stats,
     utils,
     graphics,
-    parallel
+    parallel,
+    magrittr,
+    dplyr
 License: GPL-3 | file LICENSE
 URL: https://github.com/mathijsdeen/ClusterBootstrap
 BugReports: https://github.com/mathijsdeen/ClusterBootstrap/issues

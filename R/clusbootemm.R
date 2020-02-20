@@ -103,5 +103,3 @@ plot.clusbootemm <- function(x, within, between, pch, lty, ylab="Estimated margi
     }
   }
 }
-
-                                                               

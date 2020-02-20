@@ -13,6 +13,7 @@
 #' model.1 <- clusbootglm(pos~treat*time,data=medication,clusterid=id, B=5000)
 #' emm_model.1 <- emm(model.1)
 #' summary(emm_model.1)}
+#' @importFrom stats na.omit
 #' @export
 emm <- function(object, confint.level=.95){
   specs <- object$model[-2]
@@ -26,6 +27,7 @@ emm <- function(object, confint.level=.95){
                             apply(B.emm,1,quantile,probs=confint.pboundaries))))
   names(emm) <- c("emmean","lower.CL","upper.CL")
   out <- na.omit(data.frame(outvars,emm)[order(outvars),])
+  rownames(out) <- NULL
   if(length(vars)==1) out <- out[order(out[,1]),]
   if(length(vars)==2) out <- out[order(out[,1],out[,2]),]
   if(length(vars)==1) colnames(out)[1] <- vars
@@ -68,6 +70,7 @@ summary.clusbootemm <- function(object,...){
 #' emm_model.1 <- emmeans.clusbootglm(model.1, ~treat*time)
 #' summary(emm_model.1)
 #' plot.clusbootemm(emm_model.1, time, between=treat, pch=c(15,17), lty=c(1,2))}
+#' @importFrom graphics plot points lines arrows
 #' @export
 plot.clusbootemm <- function(x, within, between, pch, lty, ylab="Estimated marginal mean", xlab="Within subject", ...){
   object <- x

@@ -7,12 +7,14 @@
 #' \item{grid}{Grid with estimated marginal means for each combination of levels of the variables.}
 #' \item{bootstrapsample.emm}{p*B matrix, with p being the number of estimates and B being the number of bootstrap samples.}
 #' @author Mathijs Deen
-#' @examples \dontrun{
-#' medication <- medication[medication$time %% 1 == 0 & medication$time <=4,]
+#' @examples 
+#' \dontrun{
+#' medication <- medication[medication$time %% 1 == 0,]
+#' medication$time_f <- as.factor(medication$time)
 #' set.seed(1)
-#' model.1 <- clusbootglm(pos~treat*time,data=medication,clusterid=id, B=5000)
-#' emm_model.1 <- emm(model.1)
-#' summary(emm_model.1)}
+#' model.1 <- clusbootglm(pos~time_f*treat, clusterid = id, data = medication)
+#' emm.1 <- emm(object = model.1)
+#' summary(object = emm.1)}
 #' @importFrom stats na.omit
 #' @export
 emm <- function(object, confint.level=.95){
@@ -41,12 +43,14 @@ emm <- function(object, confint.level=.95){
 #' @param object object of class \code{clusbootemm}.
 #' @param ... other arguments.
 #' @author Mathijs Deen
-#' @examples \dontrun{
-#' medication <- medication[medication$time %% 1 == 0 & medication$time <=4,]
+#' @examples 
+#' \dontrun{
+#' medication <- medication[medication$time %% 1 == 0,]
+#' medication$time_f <- as.factor(medication$time)
 #' set.seed(1)
-#' model.1 <- clusbootglm(pos~treat*time,data=medication,clusterid=id, B=5000)
-#' emm_model.1 <- emmeans.clusbootglm(model.1, ~treat*time)
-#' summary(emm_model.1)}
+#' model.1 <- clusbootglm(pos~time_f*treat, clusterid=id, data=medication)
+#' emm.1 <- emm(object = model.1)
+#' summary(object = emm.1)}
 #' @export
 summary.clusbootemm <- function(object,...){
   print(object$grid)
@@ -63,13 +67,14 @@ summary.clusbootemm <- function(object,...){
 #' @param xlab label for x-axis.
 #' @param ... other arguments to be passed to the \code{plot} function (see \code{\link{par}}). 
 #' @author Mathijs Deen
-#' @examples \dontrun{
-#' medication <- medication[medication$time %% 1 == 0 & medication$time <=4,]
+#' @examples 
+#' \dontrun{
+#' medication <- medication[medication$time %% 1 == 0,]
+#' medication$time_f <- as.factor(medication$time)
 #' set.seed(1)
-#' model.1 <- clusbootglm(pos~treat*time,data=medication,clusterid=id, B=5000)
-#' emm_model.1 <- emmeans.clusbootglm(model.1, ~treat*time)
-#' summary(emm_model.1)
-#' plot.clusbootemm(emm_model.1, time, between=treat, pch=c(15,17), lty=c(1,2))}
+#' model.1 <- clusbootglm(pos~time_f*treat, clusterid=id, data=medication)
+#' emm.1 <- emm(object = model.1)
+#' plot(x = emm.1, within = time_f, between = treat, pch = c(15,17), lty = c(1,2))}
 #' @importFrom graphics plot points lines arrows
 #' @export
 plot.clusbootemm <- function(x, within, between, pch, lty, ylab="Estimated marginal mean", xlab="Within subject", ...){
@@ -87,7 +92,7 @@ plot.clusbootemm <- function(x, within, between, pch, lty, ylab="Estimated margi
     m <- which(unique(between) %in% i)
     if(m==1) {
       plot(within[between==i],emmean[between==i], ylim=ylims, pch=pch[m], 
-           xlab=xlab, ylab=ylab,...)
+           xlab=xlab, ylab=ylab, ...)
     }else{
       points(within[between==i],emmean[between==i], pch=pch[m])
     }

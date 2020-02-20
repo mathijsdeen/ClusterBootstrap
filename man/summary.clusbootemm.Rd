@@ -16,11 +16,12 @@ Returns the summary of the EMM for a \code{clusbootglm} class object.
 }
 \examples{
 \dontrun{
-medication <- medication[medication$time \%\% 1 == 0 & medication$time <=4,]
+medication <- medication[medication$time \%\% 1 == 0,]
+medication$time_f <- as.factor(medication$time)
 set.seed(1)
-model.1 <- clusbootglm(pos~treat*time,data=medication,clusterid=id, B=5000)
-emm_model.1 <- emmeans.clusbootglm(model.1, ~treat*time)
-summary(emm_model.1)}
+model.1 <- clusbootglm(pos~time_f*treat, clusterid=id, data=medication)
+emm.1 <- emm(object = model.1)
+summary(object = emm.1)}
 }
 \author{
 Mathijs Deen

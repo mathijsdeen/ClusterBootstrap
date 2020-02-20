@@ -15,8 +15,11 @@
 #' @seealso A useful method for the obtained \code{clusbootptest} class object is \code{\link{plot.clusbootptest}}.
 #' @examples 
 #' \dontrun{
-#' data(opposites)
-#' clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)}
+#' medication <- medication[medication$time %% 1 == 0,]
+#' set.seed(1)
+#' permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat, 
+#'                     at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)
+#' permtest.1$pvalues}
 #' @author Mathijs Deen
 #' @import parallel
 #' @import utils
@@ -69,8 +72,11 @@ ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000
 #' @param ... other arguments to be passed into the \code{hist} function.
 #' @examples 
 #' \dontrun{
-#' data(opposites)
-#' clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)}
+#' medication <- medication[medication$time %% 1 == 0,]
+#' set.seed(1)
+#' permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat, 
+#'                     at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)
+#' plot(permtest.1, pcol = "red", pty=2, mfrow = c(2,2), breaks="FD")}
 #' @author Mathijs Deen
 #' @importFrom graphics abline hist par
 #' @export
@@ -102,7 +108,8 @@ printpbmsg <- function(pn, arguments, at_w){
       sprintf("%s",
               ifelse(length(at_w)>1, 
                      paste0(at_w, 
-                            sep=c(rep(", ",length(at_w)-2), " and ",""),collapse=""),
+                            sep=c(rep(", ",length(at_w)-2), " and ",""),
+                            collapse=""),
                      at_w)),
       sprintf("\n"))
 }

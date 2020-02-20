@@ -22,8 +22,11 @@ Plot results of a permutation test performed with ptest
 }
 \examples{
 \dontrun{
-data(opposites)
-clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)}
+medication <- medication[medication$time \%\% 1 == 0,]
+set.seed(1)
+permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat, 
+                    at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)
+plot(permtest.1, pcol = "red", pty=2, mfrow = c(2,2), breaks="FD")}
 }
 \author{
 Mathijs Deen

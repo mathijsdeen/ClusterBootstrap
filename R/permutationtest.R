@@ -106,10 +106,10 @@ printpbmsg <- function(pn, arguments, at_w){
               as.character(arguments$within), 
               ifelse(length(at_w)>1,"values","value")),
       sprintf("%s",
-              ifelse(length(at_w)>1, 
-                     paste0(at_w, 
+              ifelse(length(at_w)>1,
+                     paste0(prettyNum(at_w,digits=3),
                             sep=c(rep(", ",length(at_w)-2), " and ",""),
                             collapse=""),
-                     at_w)),
+                     prettyNum(at_w,digits=3))),
       sprintf("\n"))
 }

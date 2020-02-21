@@ -84,7 +84,6 @@ plot.clusbootemm <- function(x, within, between, pch, lty, ylab="Estimated margi
   within <- eval(arguments$within, grid)
   between <- eval(arguments$between, grid)
   if(is.factor(within)) within <- as.numeric(levels(within))[within]
-  if(is.factor(between)) between <- as.numeric(levels(between))[between]
   if(is.null(between)) between <- rep(1, length(within))
   emmean <- grid$emmean
   ylims <- c(min(grid$lower.CL),max(grid$upper.CL))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/clusbootemm.R
 \name{plot.clusbootemm}
 \alias{plot.clusbootemm}
-\title{Plot estimated marginal means for a cluster bootstrap GLM into a plot}
+\title{Plot estimated marginal means for a cluster bootstrap GLM}
 \usage{
 \method{plot}{clusbootemm}(
   x,
@@ -18,7 +18,7 @@
 \arguments{
 \item{x}{object of class \code{clusbootemm}.}
 
-\item{within}{within-subjects variable.}
+\item{within}{within-subjects variable. Should be numeric or numerically labeled factor.}
 
 \item{between}{between-subjects variable.}
 

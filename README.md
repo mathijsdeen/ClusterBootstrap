@@ -13,3 +13,5 @@ The ClusterBootstrap package has dependencies on the following packages:
 * stats
 * utils
 * parallel
+* magrittr
+* dplyr

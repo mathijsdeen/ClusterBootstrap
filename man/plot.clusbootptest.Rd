@@ -29,5 +29,5 @@ permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat,
 plot(permtest.1, pcol = "red", pty=2, mfrow = c(2,2), breaks="FD")}
 }
 \author{
-Mathijs Deen
+Mathijs Deen, Mark de Rooij
 }

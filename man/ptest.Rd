@@ -55,5 +55,5 @@ permtest.1$pvalues}
 A useful method for the obtained \code{clusbootptest} class object is \code{\link{plot.clusbootptest}}.
 }
 \author{
-Mathijs Deen
+Mathijs Deen, Mark de Rooij
 }

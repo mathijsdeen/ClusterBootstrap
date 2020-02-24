@@ -20,7 +20,7 @@
 #' permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat, 
 #'                     at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)
 #' permtest.1$pvalues}
-#' @author Mathijs Deen
+#' @author Mathijs Deen, Mark de Rooij
 #' @import parallel
 #' @import utils
 #' @importFrom dplyr filter
@@ -77,7 +77,7 @@ ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000
 #' permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat, 
 #'                     at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)
 #' plot(permtest.1, pcol = "red", pty=2, mfrow = c(2,2), breaks="FD")}
-#' @author Mathijs Deen
+#' @author Mathijs Deen, Mark de Rooij
 #' @importFrom graphics abline hist par
 #' @export
 plot.clusbootptest <- function(x, pcol="red", pty=1, mfrow=c(1,1), ...){

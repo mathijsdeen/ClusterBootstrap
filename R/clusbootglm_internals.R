@@ -53,6 +53,6 @@ confint_BCa <- function(B, invalid.samples, model, data, clusterid, family, coef
   return(ci_BCa)
 }
 
-.onAttach <- function(libname, pkgname) {
-  packageStartupMessage("This is a development version of ClusterBootstrap!")
-}
+#.onAttach <- function(libname, pkgname) {
+#  packageStartupMessage("This is a development version of ClusterBootstrap!")
+#}

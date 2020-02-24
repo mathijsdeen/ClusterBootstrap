@@ -1,3 +1,11 @@
+Changes in Version 1.1.0 (2020-02-24)
+=====================================
+
+  * Added functionality to calculate and plot estimated marginal means
+
+  * Added permutation test and a plot function to assess observed data under null distribution(s)
+  
+
 Changes in Version 1.0.0 (2018-06-26)
 =====================================
 

@@ -1,0 +1,13 @@
+citHeader("To cite the ClusterBootstrap package in publications, please use:")
+
+citEntry(entry = "Article",
+         title = "{ClusterBootstrap}: An {R} package for the analysis of hierarchical data using generalized linear models with the cluster bootstrap.",
+         author = personList(as.person("Mathijs Deen"), as.person("Mark de Rooij")),
+         journal = "Behavior Research Methods",
+         year = "in press",
+         url = "https://doi.org/10.3758/s13428-019-01252-y",
+         textVersion = paste("Deen, M. & de Rooij, M. (in press).",
+                             "ClusterBootstrap: An R package for the analysis of hierarchical data using generalized linear models with the cluster bootstrap.",
+                             "Behavior Research Methods",
+                             "URL: https://doi.org/10.3758/s13428-019-01252-y")
+)

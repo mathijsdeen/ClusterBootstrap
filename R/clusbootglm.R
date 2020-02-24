@@ -30,7 +30,7 @@
 #' clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)}
 #' @author Mathijs Deen, Mark de Rooij
 #' @import parallel
-#' @import stats
+#' @importFrom stats glm qnorm coef quantile pnorm gaussian sd model.matrix
 #' @import utils
 #' @export
 clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint.level=.95, n.cores=1){

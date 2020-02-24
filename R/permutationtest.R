@@ -48,7 +48,7 @@ ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000
       dplyr::filter(w == at_w[i])
     ts[i,1] <- t.test(y~b,pset)$statistic
     for(p in 2:pn){
-      ts[i,p] <- t.test(sample(y)~b,pset)$statistic
+      ts[i,p] <- t.test(formula = sample(y)~b, data = pset, alternative="two.sided")$statistic
       if(progress.bar){
         c <- c + 1
         setTxtProgressBar(pb, c)

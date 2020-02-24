@@ -56,10 +56,10 @@ summary.clusbootemm <- function(object,...){
   print(object$grid)
 }
 
-#' @title Plot estimated marginal means for a cluster bootstrap GLM into a plot
+#' @title Plot estimated marginal means for a cluster bootstrap GLM
 #' @description Plots the estimated marginal means of an \code{clusbootglm} object. Works with one within-subjects and/or one between-subjects variable.
 #' @param x object of class \code{clusbootemm}.
-#' @param within within-subjects variable.
+#' @param within within-subjects variable. Should be numeric or numerically labeled factor.
 #' @param between between-subjects variable.
 #' @param pch point character. Length must be equal to the number of between-subjects levels.
 #' @param lty linetype. Length must be equal to the number of between-subjects levels.
@@ -85,6 +85,9 @@ plot.clusbootemm <- function(x, within, between, pch, lty, ylab="Estimated margi
   between <- eval(arguments$between, grid)
   if(is.factor(within)) within <- as.numeric(levels(within))[within]
   if(is.null(between)) between <- rep(1, length(within))
+  if(length(unique(between)) != length(pch) | length(unique(between)) != length(lty)){
+    stop(sprintf("Arguments pch and lty should be of length %d",length(unique(between))), call.=FALSE)
+  }
   emmean <- grid$emmean
   ylims <- c(min(grid$lower.CL),max(grid$upper.CL))
   for(i in unique(between)){

@@ -1,6 +1,6 @@
 #' @title Fit generalized linear models with the cluster bootstrap
 #' @description Fit a generalized linear model with the cluster bootstrap for analysis of clustered data.
-#' @param model generalized linear model to be fitted with the cluster bootstrap.
+#' @param model generalized linear model to be fitted with the cluster bootstrap. This should either be a formula (or be able to be interpreted as one) or a \code{glm} / \code{lm} object. From the \code{(g)lm} objects, the formula will be used.
 #' @param data dataframe that contains the data.
 #' @param clusterid variable in data that identifies the clusters.
 #' @param family error distribution to be used in the model, e.g. \code{gaussian} or \code{binomial}.
@@ -30,7 +30,7 @@
 #' clusbootglm(SCORE~Time*COG,data=opposites,clusterid=Subject)}
 #' @author Mathijs Deen, Mark de Rooij
 #' @import parallel
-#' @importFrom stats glm qnorm coef quantile pnorm gaussian sd model.matrix
+#' @importFrom stats glm qnorm coef quantile pnorm gaussian sd model.matrix as.formula
 #' @import utils
 #' @export
 clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint.level=.95, n.cores=1){
@@ -40,6 +40,7 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
     message(sprintf("Note: \"n.cores\" was set to %d, but only %d are available. Using all cores.",n.cores,tt_cores))
   }
   #setup
+  model <- as.formula(model)
   res.or <- glm(model,family=family, data = data)
   confint.pboundaries = c((1-confint.level)/2,1-(1-confint.level)/2)
   confint.Zboundaries = qnorm(confint.pboundaries)

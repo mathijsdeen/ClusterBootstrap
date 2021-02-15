@@ -15,7 +15,7 @@ clusbootglm(
 )
 }
 \arguments{
-\item{model}{generalized linear model to be fitted with the cluster bootstrap.}
+\item{model}{generalized linear model to be fitted with the cluster bootstrap. This should either be a formula (or be able to be interpreted as one) or a \code{glm} / \code{lm} object. From the \code{(g)lm} objects, the formula will be used.}
 
 \item{data}{dataframe that contains the data.}
 

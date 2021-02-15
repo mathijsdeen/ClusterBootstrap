@@ -1,4 +1,4 @@
-Changes in Version 1.1.1 (2021-02-15)
+Changes in Version 1.1.2 (2021-02-15)
 =====================================
 
   * clusbootglm can handle lm/glm class objects as model input as an alternative to a formula

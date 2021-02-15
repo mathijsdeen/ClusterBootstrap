@@ -4,13 +4,15 @@
 \name{opposites}
 \alias{opposites}
 \title{Opposites naming data}
-\format{the following variables are available:
+\format{
+the following variables are available:
 \itemize{
  \item \code{Subject}: subject indicator
  \item \code{Time}: a time variable, ranging 0-3
  \item \code{COG}: cognitive skill, measured once (at time=0)
  \item \code{SCORE}: score on opposites naming task
-}}
+}
+}
 \usage{
 opposites
 }

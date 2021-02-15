@@ -1,7 +1,9 @@
 Changes in Version 1.1.2 (2021-02-15)
 =====================================
 
-  * clusbootglm can handle lm/glm class objects as model input as an alternative to a formula
+  * A paper about the package has been published in Behavior Research Methods (see citation("ClusterBootstrap"))
+  
+  * Function clusbootglm can handle lm/glm class objects as model input as an alternative to a formula
   
   
 Changes in Version 1.1.0 (2020-02-24)

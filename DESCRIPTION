@@ -1,6 +1,6 @@
 Package: ClusterBootstrap
 Title: Analyze Clustered Data with Generalized Linear Models using the Cluster Bootstrap
-Date: 2021-02-15
+Date: 2021-02-16
 Version: 1.1.2
 Authors@R: c(person(given = "Mathijs", family = "Deen",
                     role  = c("aut", "cre"),

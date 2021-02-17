@@ -74,12 +74,12 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
       previous_RNGkind <- RNGkind()[1]
       RNGkind("L'Ecuyer-CMRG")
       nextRNGStream(.Random.seed)
+      RNGkind(previous_RNGkind)
       clusterExport(cl,varlist=c("f","Obsno","model","family","data","p","res.or","clusbootglm_sample_glm"),envir=environment())
       splitclusters <- 1:B
       out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p, res.or))
       coefs <- t(out)
       stopCluster(cl)
-      RNGkind(previous_RNGkind)
     }
   }
   #post processing

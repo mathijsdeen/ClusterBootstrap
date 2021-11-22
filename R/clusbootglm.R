@@ -37,8 +37,9 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
   #checks
   tt_cores <- detectCores()
   if(n.cores>tt_cores) {
-    message(sprintf("Note: \"n.cores\" was set to %d, but only %d are available. Using all cores.",n.cores,tt_cores))
+    message(sprintf("Note: n.cores was set to %d, but only %d are available. Using all cores.",n.cores,tt_cores))
   }
+  if(!(n.cores > 0 & n.cores %% 1 == 0)) stop(paste0("n.cores must be non-fractional between 1 and ", tt_cores), call. = FALSE)
   #setup
   model <- as.formula(model)
   res.or <- glm(model,family=family, data = data)
@@ -71,15 +72,15 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
     #parallel:
     if(n.cores>1){
       cl <- makeCluster(max(min(n.cores,tt_cores,2))) 
+      on.exit(stopCluster(cl), add = TRUE)
       previous_RNGkind <- RNGkind()[1]
       RNGkind("L'Ecuyer-CMRG")
+      on.exit(RNGkind(previous_RNGkind), add = TRUE)
       nextRNGStream(.Random.seed)
-      RNGkind(previous_RNGkind)
       clusterExport(cl,varlist=c("f","Obsno","model","family","data","p","res.or","clusbootglm_sample_glm"),envir=environment())
       splitclusters <- 1:B
       out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p, res.or))
       coefs <- t(out)
-      stopCluster(cl)
     }
   }
   #post processing

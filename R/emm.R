@@ -30,7 +30,6 @@ emm <- function(object, confint.level=.95){
   emm <- data.frame(t(rbind(apply(B.emm, 1, mean),
                             apply(B.emm,1,quantile,probs=confint.pboundaries))))
   names(emm) <- c("emmean","lower.CL","upper.CL")
-# out <- na.omit(data.frame(outvars,emm)[order(outvars),]) creates a warning in R >= 4.0.0
   out <- na.omit(data.frame(outvars,emm) %>% arrange(outvars))
   rownames(out) <- NULL
   if(length(vars)==1) out <- out[order(out[,1]),]

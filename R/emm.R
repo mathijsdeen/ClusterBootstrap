@@ -40,4 +40,3 @@ emm <- function(object, confint.level=.95){
   class(outlist) <- "clusbootemm"
   return(outlist)
 }
-

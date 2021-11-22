@@ -1,7 +1,8 @@
 Changes in Version 1.1.3 (2021-XX-XX)
 =====================================
 
-  * Fixed an issue where the RNG kind is not reset to the original value (usually Mersenne-Twister) when the use of parallel processing (which needs L'Ecuyer-CMRG) is interrupted
+  * Added proper exit handling for RNGkind() and makeCluster() when using multiple cores in clusbootglm
+  * All functions up-to-date with R >= 4.0.0
   
 
 Changes in Version 1.1.2 (2021-02-16)

@@ -15,11 +15,12 @@ Depends:
     graphics,
     parallel,
     magrittr,
-    dplyr
+    dplyr,
+    rlang
 License: GPL-3 | file LICENSE
 URL: https://github.com/mathijsdeen/ClusterBootstrap
 BugReports: https://github.com/mathijsdeen/ClusterBootstrap/issues
 Maintainer: Mathijs Deen <m.l.deen@fsw.leidenuniv.nl>
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8

@@ -10,6 +10,7 @@
   newdata = NULL,
   interval = FALSE,
   confint.level = NULL,
+  keep.bootstrap.matrix = FALSE,
   ...
 )
 }
@@ -24,10 +25,15 @@
 
 \item{confint.level}{Level of the confidence interval. Should be in [0, 1]. Defaults to .95 when \code{interval} = TRUE.}
 
+\item{keep.bootstrap.matrix}{Boolean, indicating whether the n * B bootstrap matrix should be returned. If TRUE, the return value for \code{predict.clusbootglm} becomes a list.}
+
 \item{...}{additional arguments passed to the function defined in the \code{stat} parameter.}
 }
 \value{
-\code{predict.clusbootglm} returns a matrix, containing the predicted values by evaluating the regression parameters in the \code{clusbootglm} object in the frame \code{newdata}.
+If \code{keep.bootstrap.matrix} is FALSE, \code{predict.clusbootglm} returns a matrix, containing the predicted values by evaluating the regression parameters in the \code{clusbootglm} object in the frame \code{newdata}.
+If \code{keep.bootstrap.matrix} is TRUE, the function returns a list containing: 
+\item{predictions}{The aforementioned matrix.}
+\item{bootstrapmatrix}{A n * B matrix with the predictions within all bootstrap samples.}
 }
 \description{
 Returns the predicted values for an \code{clusbootglm} object.

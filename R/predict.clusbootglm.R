@@ -5,8 +5,12 @@
 #' @param newdata Optional data frame in which to look for variables with which to predict. If omitted, observations from the data value of the \code{clusbootglm} object are used.
 #' @param interval Boolean, indicating whether a confidence interval should be returned.
 #' @param confint.level Level of the confidence interval. Should be in [0, 1]. Defaults to .95 when \code{interval} = TRUE.
+#' @param keep.bootstrap.matrix Boolean, indicating whether the n * B bootstrap matrix should be returned. If TRUE, the return value for \code{predict.clusbootglm} becomes a list.
 #' @param ... additional arguments passed to the function defined in the \code{stat} parameter.
-#' @return \code{predict.clusbootglm} returns a matrix, containing the predicted values by evaluating the regression parameters in the \code{clusbootglm} object in the frame \code{newdata}.
+#' @return If \code{keep.bootstrap.matrix} is FALSE, \code{predict.clusbootglm} returns a matrix, containing the predicted values by evaluating the regression parameters in the \code{clusbootglm} object in the frame \code{newdata}.
+#' If \code{keep.bootstrap.matrix} is TRUE, the function returns a list containing: 
+#' \item{predictions}{The aforementioned matrix.}
+#' \item{bootstrapmatrix}{A n * B matrix with the predictions within all bootstrap samples.}
 #' @author Mathijs Deen
 #' @examples 
 #' \dontrun{
@@ -19,7 +23,7 @@
 #' @importFrom dplyr arrange
 #' @importFrom magrittr %>%
 #' @export
-predict.clusbootglm <- function(object, stat = mean, newdata = NULL, interval = FALSE, confint.level = NULL, ...) {
+predict.clusbootglm <- function(object, stat = mean, newdata = NULL, interval = FALSE, confint.level = NULL, keep.bootstrap.matrix = FALSE, ...) {
   if(is.null(newdata)) {
     X <- model.matrix(object = object$model[-2], data = object$data)[ , colnames(object$coefficients)]
   }else{
@@ -36,6 +40,9 @@ predict.clusbootglm <- function(object, stat = mean, newdata = NULL, interval = 
                          probs = c((1-confint.level)/2, 1-(1-confint.level)/2)))
     out <- cbind(out, ci.bounds)
     colnames(out) <- c(paste0(all.vars(object$model[-3]),".pred"), "lower.CL", "upper.CL")
+  }
+  if(keep.bootstrap.matrix == TRUE) {
+    out <- list(predictions = out, bootstrapmatrix = bootpreds)
   }
   return(out)
 }
@@ -57,6 +64,7 @@ predict.clusbootglm <- function(object, stat = mean, newdata = NULL, interval = 
 #' @importFrom magrittr %>%
 #' @importFrom rlang syms
 #' @importFrom rlang !!!
+#' @importFrom rlang .data
 #' @export
 emmeans <- function(object, confint.level = .95) {
   df <- data.frame(unique(object$data[ , all.vars(object$model[-2])]))
@@ -65,7 +73,7 @@ emmeans <- function(object, confint.level = .95) {
   emms <- cbind(df, emms)
   colnames(emms)[ncol(emms)] <- "emmean"
   emms <- data.frame(emms)
-  emms <- emms %>% arrange(!!!syms(colnames(.)))
+  emms <- emms %>% arrange(!!!syms(colnames(.data)))
   return(emms)
 }
 

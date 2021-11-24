@@ -5,11 +5,12 @@
 #' @param newdata Optional data frame in which to look for variables with which to predict. If omitted, observations from the data value of the \code{clusbootglm} object are used.
 #' @param interval Boolean, indicating whether a confidence interval should be returned.
 #' @param confint.level Level of the confidence interval. Should be in [0, 1]. Defaults to .95 when \code{interval} = TRUE.
-#' @param keep.bootstrap.matrix Boolean, indicating whether the n * B bootstrap matrix should be returned. If TRUE, the return value for \code{predict.clusbootglm} becomes a list.
+#' @param keep.bootstrap.matrix Boolean, indicating whether the n * B bootstrap matrix should be returned. If TRUE, the return value for \code{predict.clusbootglm} becomes a list (see 'Value' below).
 #' @param ... additional arguments passed to the function defined in the \code{stat} parameter.
-#' @return If \code{keep.bootstrap.matrix} is FALSE, \code{predict.clusbootglm} returns a matrix, containing the predicted values by evaluating the regression parameters in the \code{clusbootglm} object in the frame \code{newdata}.
+#' @return If \code{keep.bootstrap.matrix} is FALSE, \code{predict.clusbootglm} returns a matrix, containing the predicted values by evaluating the regression parameters 
+#' in \code{newdata} (which defaults to the data value in \code{object}).
 #' If \code{keep.bootstrap.matrix} is TRUE, the function returns a list containing: 
-#' \item{predictions}{The aforementioned matrix.}
+#' \item{predictions}{Matrix containing predicted values by evaluating the regression parameters in \code{object$data}.}
 #' \item{bootstrapmatrix}{A n * B matrix with the predictions within all bootstrap samples.}
 #' @author Mathijs Deen
 #' @examples 
@@ -50,7 +51,7 @@ predict.clusbootglm <- function(object, stat = mean, newdata = NULL, interval = 
 #' @title Calculate estimated marginal means for a cluster bootstrap GLM
 #' @description Returns estimated marginal means of a \code{clusbootglm} object. This is an experimental approach to the old \code{emm} function.
 #' @param object Object of class \code{clusbootglm}.
-#' @param confint.level Level of the confidence interval. Should be in [0, 1]. Defaults to .95.
+#' @param confint.level Level of the confidence interval. Must be between 0 and 1. Defaults to 0.95.
 #' @return \code{emmeans} returns estimated marginal means for a cluster bootstrap GLM. Does not work with \code{plot.clusbootemm} yet.
 #' @author Mathijs Deen
 #' @examples 
@@ -66,7 +67,7 @@ predict.clusbootglm <- function(object, stat = mean, newdata = NULL, interval = 
 #' @importFrom rlang !!!
 #' @importFrom rlang .data
 #' @export
-emmeans <- function(object, confint.level = .95) {
+emmeans <- function(object, confint.level = 0.95) {
   df <- data.frame(unique(object$data[ , all.vars(object$model[-2])]))
   names(df) <- all.vars(object$model[-2])
   emms <- predict.clusbootglm(object, newdata = df, interval = "confidence")
@@ -76,7 +77,3 @@ emmeans <- function(object, confint.level = .95) {
   emms <- emms %>% arrange(!!!syms(colnames(.data)))
   return(emms)
 }
-
-
-
-

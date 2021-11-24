@@ -9,7 +9,7 @@ emmeans(object, confint.level = 0.95)
 \arguments{
 \item{object}{Object of class \code{clusbootglm}.}
 
-\item{confint.level}{Level of the confidence interval. Should be in [0, 1]. Defaults to .95.}
+\item{confint.level}{Level of the confidence interval. Must be between 0 and 1. Defaults to 0.95.}
 }
 \value{
 \code{emmeans} returns estimated marginal means for a cluster bootstrap GLM. Does not work with \code{plot.clusbootemm} yet.

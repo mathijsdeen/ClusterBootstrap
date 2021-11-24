@@ -1,5 +1,5 @@
 #' @title Calculate estimated marginal means for a cluster bootstrap GLM
-#' @description Returns the estimated marginal means of an \code{clusbootglm} object.
+#' @description Returns the estimated marginal means of a \code{clusbootglm} object.
 #' This function works with a maximum of one between-subjects and one within-subjects variable.
 #' @param object object of class \code{clusbootglm}.
 #' @param confint.level level of the confidence interval.

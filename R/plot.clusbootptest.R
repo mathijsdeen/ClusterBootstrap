@@ -22,6 +22,7 @@ plot.clusbootptest <- function(x, pcol="red", pty=1, mfrow=c(1,1), ...){
   nplots <- length(pvals)
   oldmfrow <- par()$mfrow
   par(mfrow=mfrow)
+  on.exit(par(mfrow=oldmfrow))
   for(i in 1:nplots){
     hist(vals[i,], 
          main=sprintf("Permutation distribution at %s = %s \n (p = %s)",
@@ -32,5 +33,4 @@ plot.clusbootptest <- function(x, pcol="red", pty=1, mfrow=c(1,1), ...){
          ...)
     abline(v=vals[i,1], col=pcol, lty=pty)
   }
-  par(mfrow=oldmfrow)
 }

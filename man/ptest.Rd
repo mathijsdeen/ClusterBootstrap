@@ -2,35 +2,14 @@
 % Please edit documentation in R/ptest.R
 \name{ptest}
 \alias{ptest}
-\title{Permutation test for group differences at within-subject levels on observed data}
+\title{Permutation tests for group differences at within-subject levels on observed data}
 \usage{
-ptest(
-  data,
-  outcome,
-  within,
-  between,
-  at.within,
-  at.between,
-  pn = 1000,
-  progress.bar = TRUE
-)
+ptest(data, ...)
 }
 \arguments{
-\item{data}{data frame that contains the data in long format.}
+\item{data}{data to be used for the permutation test(s).}
 
-\item{outcome}{outcome variable (i.e., the variable for which the difference should be tested).}
-
-\item{within}{within-subject variable.}
-
-\item{between}{between-subjects variable.}
-
-\item{at.within}{determine for which within-subject levels (e.g., which timepoint) the difference should be tested.}
-
-\item{at.between}{determine the groups in the difference test (should always be of length 2).}
-
-\item{pn}{the number of permutations that should be performed.}
-
-\item{progress.bar}{indicates whether a progress bar will be shown.}
+\item{...}{placeholder for outcome argument when data class is \code{data.frame}.}
 }
 \description{
 Generic function for performing permutation tests on either observed data or bootstrap samples

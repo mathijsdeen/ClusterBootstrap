@@ -2,23 +2,21 @@
 % Please edit documentation in R/ptest.clusbootemm.R
 \name{ptest.clusbootemm}
 \alias{ptest.clusbootemm}
-\title{Permutation test for group differences at within-subject levels on observed data}
+\title{Permutation tests for group differences at within-subject levels on observed data}
 \usage{
 \method{ptest}{clusbootemm}(
   data,
-  outcome,
   within,
   between,
   at.within,
   at.between,
   pn = 1000,
-  progress.bar = TRUE
+  progress.bar = TRUE,
+  ...
 )
 }
 \arguments{
 \item{data}{object of type \code{clusbootemm}}
-
-\item{outcome}{outcome variable (i.e., the variable for which the difference should be tested).}
 
 \item{within}{within-subject variable.}
 
@@ -31,6 +29,8 @@
 \item{pn}{the number of permutations that should be performed.}
 
 \item{progress.bar}{indicates whether a progress bar will be shown.}
+
+\item{...}{placeholder for outcome argument when data class is \code{data.frame}.}
 }
 \description{
 The one for cluster bootstrap estimated marginal means

@@ -1,6 +1,6 @@
-#' @title Permutation test for group differences at within-subject levels
+#' @title Permutation test for group differences at within-subject levels on observed data
 #' @description Perform permutation tests for differences between two groups at given within-subject levels in a long-formatted dataframe
-#' @param data dataframe that contains the data in long format.
+#' @param data data frame that contains the data in long format.
 #' @param outcome outcome variable (i.e., the variable for which the difference should be tested).
 #' @param within within-subject variable.
 #' @param between between-subjects variable.
@@ -8,7 +8,7 @@
 #' @param at.between determine the groups in the difference test (should always be of length 2).
 #' @param pn the number of permutations that should be performed.
 #' @param progress.bar indicates whether a progress bar will be shown.
-#' @return \code{ptest} produces an object of class \code{"clusbootptest"}, containing the following relevant components:
+#' @return \code{ptest.data.frame} produces an object of class \code{"clusbootptest"}, containing the following relevant components:
 #' \item{perm.statistics}{A matrix of \code{length(at.within)} rows and \code{pn} columns, containing the Welch t-test statics for all permutations within the \code{at.within} level in the columns. The first column contains the t statistic for the observed data.}
 #' \item{pvalues}{Data frame containing the p values for every \code{at.within} level.}
 #' @details In every permutation cycle, the outcome variable gets permutated and the Welch t test statistic is calculated. 
@@ -27,7 +27,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom stats t.test
 #' @export
-ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000, progress.bar=TRUE){
+ptest.data.frame <- function(data, outcome, within, between, at.within, at.between, pn=1000, progress.bar=TRUE){
   arguments <- as.list(match.call())
   y <- eval(arguments$outcome, data)
   w <- eval(arguments$within, data)

@@ -25,7 +25,7 @@ emmeans <- function(object, confint.level = 0.95) {
   colnames(emms)[ncol(df) + 1] <- "emmean"
   emms <- data.frame(emms)
   emms <- emms %>% arrange(!!!syms(all.vars(object$model[-2])))
-  outlist <- list(bootstrapsample.emm = preds.out$bootstrapmatrix,
+  outlist <- list(df = df, bootstrapsample.emm = preds.out$bootstrapmatrix,
                   grid = emms)
   class(outlist) <- "clusbootemm"
   return(outlist)

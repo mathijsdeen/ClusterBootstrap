@@ -13,5 +13,5 @@
 #' summary(object = emm.1)}
 #' @export
 summary.clusbootemm <- function(object,...){
-  print(object$grid)
+  print(object$grid, row.names = FALSE)
 }

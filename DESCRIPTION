@@ -16,7 +16,8 @@ Depends:
     parallel,
     magrittr,
     dplyr,
-    rlang
+    rlang,
+    tidyr
 License: GPL-3 | file LICENSE
 URL: https://github.com/mathijsdeen/ClusterBootstrap
 BugReports: https://github.com/mathijsdeen/ClusterBootstrap/issues

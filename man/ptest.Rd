@@ -9,7 +9,7 @@ ptest(data, ...)
 \arguments{
 \item{data}{data to be used for the permutation test(s).}
 
-\item{...}{placeholder for outcome argument when data class is \code{data.frame}.}
+\item{...}{additional arguments.}
 }
 \description{
 Generic function for performing permutation tests on either observed data or bootstrap samples

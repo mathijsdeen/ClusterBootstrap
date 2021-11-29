@@ -8,7 +8,7 @@
 #' @param pn the number of permutations that should be performed.
 #' @param progress.bar indicates whether a progress bar will be shown.
 #' @param outcome the outcome variable.
-#' @param ... placeholder for outcome argument when data class is \code{data.frame}.
+#' @param ... additional arguments (none apply).
 #' @return \code{ptest.data.frame} produces an object of class \code{"clusbootptest"}, containing the following relevant components:
 #' \item{perm.statistics}{A matrix of \code{length(at.within)} rows and \code{pn} columns, containing the Welch t-test statics for all permutations within the \code{at.within} level in the columns. The first column contains the t statistic for the observed data.}
 #' \item{pvalues}{Data frame containing the p values for every \code{at.within} level.}

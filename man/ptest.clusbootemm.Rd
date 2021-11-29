@@ -30,7 +30,7 @@
 
 \item{progress.bar}{indicates whether a progress bar will be shown.}
 
-\item{...}{placeholder for outcome argument when data class is \code{data.frame}.}
+\item{...}{additional arguments (none apply).}
 }
 \description{
 The one for cluster bootstrap estimated marginal means

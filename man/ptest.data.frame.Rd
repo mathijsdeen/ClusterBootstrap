@@ -33,7 +33,7 @@
 
 \item{progress.bar}{indicates whether a progress bar will be shown.}
 
-\item{...}{placeholder for outcome argument when data class is \code{data.frame}.}
+\item{...}{additional arguments (none apply).}
 }
 \value{
 \code{ptest.data.frame} produces an object of class \code{"clusbootptest"}, containing the following relevant components:

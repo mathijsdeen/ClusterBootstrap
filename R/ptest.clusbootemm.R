@@ -7,7 +7,7 @@
 #' @param at.between determine the groups in the difference test (should always be of length 2).
 #' @param pn the number of permutations that should be performed.
 #' @param progress.bar indicates whether a progress bar will be shown.
-#' @param ... placeholder for outcome argument when data class is \code{data.frame}.
+#' @param ... additional arguments (none apply).
 #' @author Mathijs Deen
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr starts_with

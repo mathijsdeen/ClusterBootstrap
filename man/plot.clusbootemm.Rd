@@ -10,6 +10,9 @@
   between,
   pch,
   lty,
+  pcol,
+  lcol,
+  ylim,
   ylab = "Estimated marginal mean",
   xlab = "Within subject",
   ...
@@ -26,6 +29,12 @@
 
 \item{lty}{linetype. Length must be equal to the number of between-subjects levels.}
 
+\item{pcol}{point color. Length must be equal to the number of between-subjects levels.}
+
+\item{lcol}{line color. Length must be equal to the number of between-subjects levels.}
+
+\item{ylim}{limits of the y axis. If omitted, it will be based on the lowest and highest values within the confidence intervals of the estimated marginal means.}
+
 \item{ylab}{label for y-axis.}
 
 \item{xlab}{label for x-axis.}
@@ -40,9 +49,10 @@ Plots the estimated marginal means of an \code{clusbootglm} object. Works with o
 medication <- medication[medication$time \%\% 1 == 0,]
 medication$time_f <- as.factor(medication$time)
 set.seed(1)
-model.1 <- clusbootglm(pos~time_f*treat, clusterid=id, data=medication)
+model.1 <- clusbootglm(pos~time_f*treat, clusterid = id, data = medication)
 emm.1 <- emm(object = model.1)
-plot(x = emm.1, within = time_f, between = treat, pch = c(15,17), lty = c(1,2))}
+plot(x = emm.1, within = time_f, between = treat, pch = c(15,17), lty = c(1,2), 
+     lcol = c("blue", "red"), pcol = c("blue","red"), )}
 }
 \author{
 Mathijs Deen

@@ -24,6 +24,7 @@
 #' @importFrom dplyr arrange
 #' @importFrom magrittr %>%
 #' @export
+#' @method predict clusbootglm
 predict.clusbootglm <- function(object, stat = mean, newdata = NULL, interval = FALSE, confint.level = NULL, keep.bootstrap.matrix = FALSE, ...) {
   if(is.null(newdata)) {
     X <- model.matrix(object = object$model[-2], data = object$data)[ , colnames(object$coefficients)]

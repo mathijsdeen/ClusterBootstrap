@@ -29,6 +29,58 @@ clusterResample <- function(df, clusters, replace) {
   resampleRecursive(df, clusters, replace)
 }
 
+library(data.table)
+
+clusterResampleDT <- function(df, clusters, replace) {
+  stopifnot(is.data.frame(df),
+            length(clusters) == length(replace))
+  
+  dt_original <- as.data.table(df)
+  dt <- copy(dt_original)
+  
+  # Voeg een index toe om op het eind de volgorde/structuur te herstellen
+  dt[, .orig_row := .I]
+  
+  # Start met een kolom die alles selecteert
+  dt_resampled <- dt
+  
+  for (level in seq_along(clusters)) {
+    cl_var <- clusters[level]
+    with_rep <- replace[level]
+    
+    if (level == 1L) {
+      # Top-niveau: sample over hele dataset
+      ids <- unique(dt_resampled[[cl_var]])
+      sampled_ids <- sample(ids, length(ids), replace = with_rep)
+      sampled <- data.table(sampled_ids, .sample_id = seq_along(sampled_ids))
+      setnames(sampled, "sampled_ids", cl_var)
+      
+      dt_resampled <- merge(
+        sampled,
+        dt_resampled,
+        by = cl_var,
+        allow.cartesian = TRUE
+      )
+      setorder(dt_resampled, .sample_id)
+      dt_resampled[, .sample_id := NULL]
+    } else {
+      # Lagere niveaus: sample binnen groep van hogere niveaus
+      group_vars <- clusters[seq_len(level - 1L)]
+      
+      dt_resampled <- dt_resampled[,
+                                   .SD[sample(.N, .N, replace = with_rep)],
+                                   by = group_vars]
+    }
+  }
+  
+  # Zet kolommen terug in originele volgorde (zonder .orig_row)
+  setcolorder(dt_resampled, names(dt_original))
+  dt_resampled[]
+}
+
+
+
+
 clusterBootstrap <- function(df, clusters, replace,
                              stat_fun, R = 1000, ...) {
   stopifnot(
@@ -51,47 +103,10 @@ clusterBootstrap <- function(df, clusters, replace,
   res <- replicate(R, one_rep(), simplify = FALSE)
   stats_mat <- do.call(rbind, res)
   
-  ## nette kolomnamen behouden (indien aanwezig) en als tibble teruggeven
   stats_tbl <- tibble::as_tibble(stats_mat,
                                  .name_repair = ~ names(t0) %||%
                                    paste0("stat", seq_along(t0)))
   
   stats_tbl
 }
-
-set.seed(2025)
-
-# Speeldata met drie niveaus: school → klas → leerling
-n_school  <- 3
-n_class   <- 3
-n_student <- 3
-
-demo <- expand.grid(
-  school  = paste0("S", 1:n_school),
-  class   = paste0("C", 1:n_class),
-  student = paste0("P", 1:n_student)
-) |>
-  mutate(score1 = rnorm(n()),
-         score2 = rnorm(n())) |>
-  arrange(school, class, student)
-
-boot_fun <- function(d) c(a = mean(d$score1), b = mean(d$score2))
-boot_fun2 <- function(d) matrix(c(a = mean(d$score1), b = mean(d$score2),
-                                  c = mean(d$score1), d = mean(d$score2)),
-                                nrow=4)
-
-set.seed(1)
-clusterBootstrap(df       = demo, 
-                 clusters = c("school", "class", "student"),
-                 replace  = c(TRUE, TRUE, TRUE),
-                 stat_fun = boot_fun,
-                 R        = 100)
-
-out <- cluster_resample(
-  demo,
-  clusters = c("school", "class", "student"),
-  replace  = c(FALSE, FALSE, TRUE)
-)
-out |>
-  arrange(school, class, student)
 

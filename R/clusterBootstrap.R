@@ -72,7 +72,7 @@
 #' @export
 #' @author Mathijs Deen
 clusterBootstrap <- function(df, clusters, replace,
-stat_fun, B = 5000, ...){
+                             stat_fun, B = 5000, ...){
   stopifnot(is.data.frame(df),
             length(clusters) == length(replace),
             is.function(stat_fun),

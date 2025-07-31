@@ -1,3 +1,4 @@
 - confint method
 - oude aanpassingen doorvoeren (zie originele dev branch)
-- submitten op CRAN
+- zoveel mogelijk dependency eruit (m.n. magrittr (%>%) en dplyr (filter))
+- submitten op CRAN (denk aan mailadres!)

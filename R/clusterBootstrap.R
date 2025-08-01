@@ -28,6 +28,7 @@
 #' 
 #' @examples 
 #' \dontrun{
+#' library(dplyr)
 #' medData <- medication |>
 #' filter(time %% 1 == 0, time < 4)
 #' bootFun <- function(d) lm(pos ~ treat*time, data = d)$coefficients

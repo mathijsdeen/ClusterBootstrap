@@ -5,4 +5,5 @@ V suggests dplyr
 - testen
 - testfiles en todo verwijderen
 - datum in DESCRIPTION en changelog aanpassen
+- issue en PR verwijderen op github
 - submitten op CRAN (denk aan mailadres!)

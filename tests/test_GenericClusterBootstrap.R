@@ -125,3 +125,26 @@
 # # Controle: per id exact 1 rij per time
 # res[, .N, by = .(id, time)][, .N, by = id][N != 2]
 # res
+# 
+# library(ClusterBootstrap)
+# library(dplyr)
+# data("medication")
+# medData <- medication |>
+#   filter(time %% 1 == 0, time < 4)
+# bootFun <- function(d) {
+#   lm(pos ~ treat*time, data = d)$coefficients
+# }
+# 
+# bootOut <- clusterBootstrap(df = medData, 
+#                             clusters = c("id", "time"), 
+#                             replace = c(TRUE, TRUE), 
+#                             stat_fun = bootFun, 
+#                             B = 1000)
+# 
+# confint(bootOut, type = "percentile")
+# confint(bootOut, type = "parametric")
+# confint(bootOut, type = "bc")
+# 
+# boots <- bootOut$estimates$bootstrapEstimates[[1]]
+# theta0 <- bootOut$estimates$originalEstimates[[1]]
+# quantile(boots, probs = c(0.025, 0.975))

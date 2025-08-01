@@ -8,6 +8,8 @@ Changes in Version 2.0.0 (2025-XX-XX)
   * Added proper exit handling for RNGkind() and makeCluster() when using multiple cores in clusbootglm and for plot functions
   
   * All functions up-to-date with R >= 4.0.0
+  
+  * Maintenance update: changed maintainer email address
 
 
 Changes in Version 1.1.2 (2021-02-16)

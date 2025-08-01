@@ -1,5 +1,5 @@
-- confint method
-- oude aanpassingen doorvoeren (zie originele dev branch)
-- zoveel mogelijk dependency eruit (m.n. magrittr (%>%) en dplyr (filter))
-- lifecycle?
+V confint method
+V oude aanpassingen doorvoeren (zie originele dev branch)
+V zoveel mogelijk dependency eruit (m.n. magrittr (%>%) en dplyr (filter))
+V suggests dplyr
 - submitten op CRAN (denk aan mailadres!)

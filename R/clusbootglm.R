@@ -65,7 +65,8 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
         j <- f[,i]
         obs <- unlist(Obsno[j])
         bootcoef <- tryCatch(coef(glm(model, family = family, data = data[obs,])), 
-                             warning=function(x) rep(as.numeric(NA),p))
+                             warning=function(x) rep(as.numeric(NA),p),
+                             error=function(x) rep(as.numeric(NA),p))
         coefs[i,which(names(res.or$coef) %in% names(bootcoef))] <- bootcoef
       }
     }

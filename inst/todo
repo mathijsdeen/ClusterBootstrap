@@ -2,4 +2,7 @@ V confint method
 V oude aanpassingen doorvoeren (zie originele dev branch)
 V zoveel mogelijk dependency eruit (m.n. magrittr (%>%) en dplyr (filter))
 V suggests dplyr
+- testen
+- testfiles en todo verwijderen
+- datum in DESCRIPTION en changelog aanpassen
 - submitten op CRAN (denk aan mailadres!)

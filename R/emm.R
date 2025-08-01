@@ -16,8 +16,6 @@
 #' emm.1 <- emm(object = model.1)
 #' summary(object = emm.1)}
 #' @importFrom stats na.omit
-#' @importFrom dplyr arrange
-#' @importFrom magrittr %>%
 #' @export
 emm <- function(object, confint.level=.95){
   specs <- object$model[-2]
@@ -30,7 +28,8 @@ emm <- function(object, confint.level=.95){
   emm <- data.frame(t(rbind(apply(B.emm, 1, mean),
                             apply(B.emm,1,quantile,probs=confint.pboundaries))))
   names(emm) <- c("emmean","lower.CL","upper.CL")
-  out <- na.omit(data.frame(outvars,emm) %>% arrange(outvars))
+  out <- na.omit(data.frame(outvars, emm))
+  out <- out[do.call(order, out[outvars]), ]
   rownames(out) <- NULL
   if(length(vars)==1) out <- out[order(out[,1]),]
   if(length(vars)==2) out <- out[order(out[,1],out[,2]),]

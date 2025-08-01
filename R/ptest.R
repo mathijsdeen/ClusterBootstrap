@@ -23,8 +23,6 @@
 #' @author Mathijs Deen, Mark de Rooij
 #' @import parallel
 #' @import utils
-#' @importFrom dplyr filter
-#' @importFrom magrittr %>%
 #' @importFrom stats t.test
 #' @export
 ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000, progress.bar=TRUE){
@@ -43,9 +41,7 @@ ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000
     c <- 0
   }
   for(i in 1:wn){
-    pset <- d %>%
-      dplyr::filter(b %in% at_b) %>%
-      dplyr::filter(w == at_w[i])
+    pset <- d[d$b %in% at_b & d$w == at_w[i], ]
     ts[i,1] <- t.test(y~b,pset)$statistic
     for(p in 2:pn){
       ts[i,p] <- t.test(formula = sample(y)~b, data = pset, alternative="two.sided")$statistic

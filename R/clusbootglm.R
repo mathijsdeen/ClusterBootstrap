@@ -36,6 +36,7 @@
 clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint.level=.95, n.cores=1){
   #checks
   tt_cores <- detectCores()
+  if(is.na(tt_cores)) tt_cores <- 1   # sometimes (e.g. with webR) detectCores() returns NA
   if(n.cores>tt_cores) {
     message(sprintf("Note: n.cores was set to %d, but only %d are available. Using all cores.",n.cores,tt_cores))
   }

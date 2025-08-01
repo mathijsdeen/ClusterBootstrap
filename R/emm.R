@@ -3,7 +3,7 @@
 #' This function works with a maximum of one between-subjects and one within-subjects variable.
 #' @param object object of class \code{clusbootglm}.
 #' @param confint.level level of the confidence interval.
-#' @return \code{emmeans} returns an object of class \code{clusbootemm}, containing the following components:
+#' @return \code{emm} returns an object of class \code{clusbootemm}, containing the following components:
 #' \item{grid}{Grid with estimated marginal means for each combination of levels of the variables.}
 #' \item{bootstrapsample.emm}{p*B matrix, with p being the number of estimates and B being the number of bootstrap samples.}
 #' @author Mathijs Deen

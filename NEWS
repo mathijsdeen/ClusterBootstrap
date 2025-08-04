@@ -15,7 +15,7 @@ Changes in Version 2.0.0 (2025-08-04)
   
   * Update package title, as the package is no longer solely for glms
   
-  * Function emm and associated methods were deleted: emm is obsolete (use predict instead) and its performance sub-par
+  * Function emm and associated methods were deleted: emm is obsolete (use predict instead) and its performance sub-par. Also, it was incompatible with base::xtfrm() in recent versions of R
   
   * Rewrite internal function calls for non-invasive export in NAMESPACE
   

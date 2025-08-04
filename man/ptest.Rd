@@ -45,7 +45,7 @@ In every permutation cycle, the outcome variable gets permutated and the Welch t
 }
 \examples{
 \dontrun{
-medication <- medication[medication$time \%\% 1 == 0,]
+meds <- medication[medication$time \%\% 1 == 0,]
 set.seed(1)
 permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat, 
                     at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)

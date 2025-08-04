@@ -12,6 +12,6 @@ The latest stable release can also be downloaded from the Comprehensive R Archiv
 The ClusterBootstrap package has dependencies on the following packages:
 * stats
 * utils
+* graphics
 * parallel
-* magrittr
-* dplyr
+* data.table

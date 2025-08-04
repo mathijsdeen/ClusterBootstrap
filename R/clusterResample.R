@@ -37,51 +37,66 @@
 #' }
 #' @author Mathijs Deen
 #' @export
-clusterResample <- function(df, clusters, replace){
+clusterResample <- function(df, clusters, replace) {
   stopifnot(is.data.frame(df),
             length(clusters) == length(replace))
-
-  dt_original <- as.data.table(df)
-  dt_resampled <- copy(dt_original)
-
-  for(level in seq_along(clusters)){
+  
+  dt_original   <- as.data.table(df)
+  dt_resampled  <- copy(dt_original)
+  
+  for (level in seq_along(clusters)) {
     cl_var     <- clusters[level]
     with_rep   <- replace[level]
     group_vars <- if (level == 1L) character(0) else clusters[seq_len(level - 1L)]
-
+    
     id_table <- unique(dt_original[, c(group_vars, cl_var), with = FALSE])
-
-    # fix error when within group with n=1 you get a double which should be numeric
-    original_type <- typeof(dt_original[[cl_var]])
-    coerce_to_type <- switch(original_type,
+    
+    original_class <- class(dt_original[[cl_var]])[1]
+    coerce_to_type <- switch(original_class,
                              character = as.character,
                              integer   = as.integer,
+                             numeric   = as.numeric,
                              double    = as.numeric,
-                             factor    = as.character, # safer as well
-                             stop("Unsupported cluster variable type: ", original_type))
-
-    if(length(group_vars) == 0){
-      sampled_vec <- coerce_to_type(sample(x       = id_table[[cl_var]],
-                                           size    = nrow(id_table),
-                                           replace = with_rep))
+                             factor    = function(x) factor(x, levels = levels(dt_original[[cl_var]])),
+                             stop("Unsupported class for cluster variable: ", original_class)
+    )
+    
+    # Ensure that the data types of the cluster variable match exactly in both tables before merging.
+    # This prevents data.table errors such as:
+    # - "Column X of result for group Y is type 'integer' but expecting type 'double'" (during `by =`)
+    # - "Incompatible join types: x.var (factor) and i.var (integer)" (during `merge()`)
+    # To avoid these issues, we explicitly coerce both `sampled_ids` and `dt_resampled` to the original type of the cluster variable.
+    id_table[[cl_var]]     <- coerce_to_type(id_table[[cl_var]])
+    dt_resampled[[cl_var]] <- coerce_to_type(dt_resampled[[cl_var]])
+    
+    if (length(group_vars) == 0) {
+      sampled_vec <- sample(id_table[[cl_var]],
+                            size = nrow(id_table),
+                            replace = with_rep)
+      sampled_vec <- coerce_to_type(sampled_vec)
       sampled_ids <- data.table(tmp = sampled_vec)
       setnames(sampled_ids, "tmp", cl_var)
-    } else{
+    } else {
       sampled_ids <- id_table[,
-                              .(sampled = coerce_to_type(sample(x       = get(cl_var),
-                                                                size    = .N,
-                                                                replace = with_rep))),
-                              by = group_vars]
+                              {
+                                sampled <- sample(get(cl_var), size = .N, replace = with_rep)
+                                sampled <- coerce_to_type(sampled)
+                                .(sampled = sampled)
+                              },
+                              by = group_vars
+      ]
       setnames(sampled_ids, "sampled", cl_var)
     }
-
-    dt_resampled <- merge(x               = sampled_ids,
-                          y               = dt_resampled,
-                          by              = c(group_vars, cl_var),
-                          allow.cartesian = TRUE,
-                          sort            = FALSE)
+    
+    dt_resampled <- merge(
+      x               = sampled_ids,
+      y               = dt_resampled,
+      by              = c(group_vars, cl_var),
+      allow.cartesian = TRUE,
+      sort            = FALSE
+    )
   }
-
+  
   setcolorder(dt_resampled, names(dt_original))
   dt_resampled[]
 }

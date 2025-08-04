@@ -2,9 +2,12 @@ V confint method
 V oude aanpassingen doorvoeren (zie originele dev branch)
 V zoveel mogelijk dependency eruit (m.n. magrittr (%>%) en dplyr (filter))
 V suggests dplyr
-- testen
-- testfiles en todo verwijderen
+V README.md -> dependencies
+V example voor confint
+V testen
+V testfiles verwijderen
+V seeAlso naar confint
+- todo verwijderen
 - datum in DESCRIPTION en changelog aanpassen
-- README.md -> dependencies
 - issue en PR verwijderen op github
 - submitten op CRAN (denk aan mailadres!)

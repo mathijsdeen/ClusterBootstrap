@@ -80,12 +80,12 @@ bootFun2 <- function(d) lm(score1 ~ score2, data = d)$coef
 clusterBootstrap(df       = demo, 
                  clusters = c("school", "class", "student"),
                  replace  = c(TRUE, FALSE, TRUE),
-                 stat_fun = boot_fun,
+                 stat_fun = bootFun2,
                  B        = 1000)
 }
 }
 \seealso{
-\code{\link{clusterResample}} for the underlying resampling mechanism.
+\code{\link{clusterResample}} for the underlying resampling mechanism. \code{\link{confint.clusterBootstrap} for cluster bootstrap confidence intervals.}
 }
 \author{
 Mathijs Deen

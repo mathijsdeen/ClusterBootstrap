@@ -24,7 +24,7 @@
 #'     \item \code{bootstrapSE}: the bootstrap standard error(s) for all rows in \code{bootstrapEstimates}. 
 #'   }
 #' }
-#' @seealso \code{\link{clusterResample}} for the underlying resampling mechanism.
+#' @seealso \code{\link{clusterResample}} for the underlying resampling mechanism. \code{\link{confint.clusterBootstrap} for cluster bootstrap confidence intervals.}
 #' 
 #' @examples 
 #' \dontrun{
@@ -67,7 +67,7 @@
 #' clusterBootstrap(df       = demo, 
 #'                  clusters = c("school", "class", "student"),
 #'                  replace  = c(TRUE, FALSE, TRUE),
-#'                  stat_fun = boot_fun,
+#'                  stat_fun = bootFun2,
 #'                  B        = 1000)
 #' }
 #' @export

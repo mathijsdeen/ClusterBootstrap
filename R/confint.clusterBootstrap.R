@@ -27,7 +27,28 @@
 #'   \item{conf.low}{The lower bound of the confidence interval.}
 #'   \item{conf.high}{The upper bound of the confidence interval.}
 #' }
-#'
+#' @examples 
+#' \dontrun{
+#' set.seed(2025)
+#' n_school  <- 30
+#' n_class   <- 8
+#' n_student <- 15
+#' 
+#' demo <- expand.grid(school  = paste0("S", 1:n_school),
+#'                     class   = paste0("C", 1:n_class),
+#'                     student = paste0("P", 1:n_student)) |>
+#'   mutate(score1 = rnorm(n()),
+#'   score2 = rnorm(n())) |>
+#'   arrange(school, class, student) |>
+#'   slice(1:(n() - 3)) # slightly unbalanced data
+#' bootFun2 <- function(d) lm(score1 ~ score2, data = d)$coef
+#' clusterBootstrap(df       = demo, 
+#'                  clusters = c("school", "class", "student"),
+#'                  replace  = c(TRUE, FALSE, TRUE),
+#'                  stat_fun = bootFun2,
+#'                  B        = 1000) |>
+#'   confint()
+#' }
 #' @seealso \code{\link{clusterBootstrap}}, \code{\link[stats]{confint}}
 #' @export
 confint.clusterBootstrap <- function(object,

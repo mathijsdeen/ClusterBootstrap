@@ -70,6 +70,7 @@
 #'                  stat_fun = bootFun2,
 #'                  B        = 1000)
 #' }
+#' @exportPattern "^[^\\.]"
 #' @export
 #' @author Mathijs Deen
 clusterBootstrap <- function(df, clusters, replace,

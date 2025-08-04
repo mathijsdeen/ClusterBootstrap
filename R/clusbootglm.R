@@ -79,9 +79,9 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
       RNGkind("L'Ecuyer-CMRG")
       on.exit(RNGkind(previous_RNGkind), add = TRUE)
       nextRNGStream(.Random.seed)
-      clusterExport(cl,varlist=c("f","Obsno","model","family","data","p","res.or","clusbootglm_sample_glm"),envir=environment())
+      clusterExport(cl,varlist=c("f","Obsno","model","family","data","p","res.or",".clusbootglm_sample_glm"),envir=environment())
       splitclusters <- 1:B
-      out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p, res.or))
+      out <- parSapplyLB(cl,splitclusters,function(x) .clusbootglm_sample_glm(f, x, Obsno, model, family, data, p, res.or))
       coefs <- t(out)
     }
   }
@@ -91,9 +91,9 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
   samples.with.NA.coef <- which(is.na(rowSums(coefs)))
   sdcoefs <- apply(coefs, 2, sd, na.rm = TRUE)
   #confidence intervals:
-  ci_percentile <- confint_percentile(coefs, confint.pboundaries)
-  ci_parametric <- confint_parametric(sdcoefs, res.or$coef, confint.Zboundaries)
-  ci_BCa <- confint_BCa(B, invalid.samples, model, data, clusterid, family, coefs, res.or$coef, p, confint.Zboundaries)
+  ci_percentile <- .confint_percentile(coefs, confint.pboundaries)
+  ci_parametric <- .confint_parametric(sdcoefs, res.or$coef, confint.Zboundaries)
+  ci_BCa <- .confint_BCa(B, invalid.samples, model, data, clusterid, family, coefs, res.or$coef, p, confint.Zboundaries)
   #results:
   rownames(ci_percentile) <- rownames(ci_BCa) <- dimnames(ci_parametric)[[1]]
   colnames(ci_parametric) <- colnames(ci_BCa) <- dimnames(ci_percentile)[[2]]

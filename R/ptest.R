@@ -36,7 +36,7 @@ ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000
   wn <- length(at_w)
   ts <- matrix(NA, nrow=wn, ncol=pn)
   if(progress.bar){
-    printpbmsg(pn, arguments, at_w)
+    .printpbmsg(pn, arguments, at_w)
     pb <- txtProgressBar(0, pn*length(at_w), style=3)
     c <- 0
   }

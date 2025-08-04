@@ -12,7 +12,7 @@
 #' confint(cbglm.1,parm=c("Time","COG"), level=.90, interval.type="percentile")}
 #' @author Mathijs Deen
 #' @export
-confint.clusbootglm<-function(object,parm="all",level=0.95,interval.type="BCa",...){
+confint.clusbootglm <- function(object,parm="all",level=0.95,interval.type="BCa",...){
   if(level < 0 | level > 1){ 
     options(error=NULL) 
     stop("'level' should be between 0 and 1 (e.g., 0.9 for a 90% confidence interval)", call.=FALSE)
@@ -21,14 +21,14 @@ confint.clusbootglm<-function(object,parm="all",level=0.95,interval.type="BCa",.
   confint.Zboundaries <- qnorm(confint.pboundaries)
   sdcoefs <- apply(object$coefficients, 2, sd, na.rm=T)
   res.or.coef <- object$lm.coefs
-  ci_percentile <- confint_percentile(object$coefficients,confint.pboundaries)
-  ci_parametric <- confint_parametric(sdcoefs,res.or.coef,confint.Zboundaries)
+  ci_percentile <- .confint_percentile(object$coefficients,confint.pboundaries)
+  ci_parametric <- .confint_parametric(sdcoefs,res.or.coef,confint.Zboundaries)
   cnames <- dimnames(ci_percentile)[[2]]
   rnames <- dimnames(ci_parametric)[[1]]
   if(interval.type=="percentile") ci_out <- ci_percentile
   else if(interval.type=="parametric") ci_out <- ci_parametric
   else if(interval.type=="BCa"){
-    ci_out <- with(object,confint_BCa(B,failed.bootstrap.samples,model,data,subject.vector,
+    ci_out <- with(object,.confint_BCa(B,failed.bootstrap.samples,model,data,subject.vector,
                                       family,coefficients,lm.coefs,length(lm.coefs),confint.Zboundaries))
   } else {
     options(error=NULL)

@@ -1,6 +1,6 @@
 # print something at start of permutation test.
 
-printpbmsg <- function(pn, arguments, at_w){
+.printpbmsg <- function(pn, arguments, at_w){
   cat(sprintf("Performing %d permutation tests for %s %s", 
               pn, 
               as.character(arguments$within), 

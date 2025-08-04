@@ -1,4 +1,4 @@
-clusbootglm_sample_glm <-function(f, i, Obsno, model, family, data, p, res.or){
+.clusbootglm_sample_glm <- function(f, i, Obsno, model, family, data, p, res.or){
   j <- f[, i]
   obs <- unlist(Obsno[j])
   coef <- rep(NA,p) #added

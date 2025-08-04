@@ -1,4 +1,4 @@
-clusjackglm <- function (model, data, clusterid, family = gaussian) {
+.clusjackglm <- function (model, data, clusterid, family = gaussian) {
   res.or <- glm(model,family=family, data = data)
   n <- nrow(data)
   p <- length(res.or$coef)

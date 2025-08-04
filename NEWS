@@ -1,6 +1,8 @@
-Changes in Version 2.0.0 (2025-XX-XX)
+Changes in Version 2.0.0 (2025-08-04)
 =====================================
 
+  * Maintenance update: changed maintainer email address
+  
   * Added generalized (i.e., applicable to any function) clusterBootstrap function for cluster resampling at multiple levels, allowing for replace specification at each level. 
   
   * Added check for return value of detectCores() in clusbootglm. detectCores() returns NA in specific situations (e.g., when using webR), breaking the function (issue #18)
@@ -11,11 +13,13 @@ Changes in Version 2.0.0 (2025-XX-XX)
   
   * All functions up-to-date with R >= 4.0.0, examples require R >= 4.1.0 (base pipe)
   
-  * Maintenance update: changed maintainer email address
+  * Update package title, as the package is no longer solely for glms
   
-  * Update package title, as the package is no longer solely for glms.
+  * Function emm and associated methods were deleted: emm is obsolete (use predict instead) and its performance sub-par
   
-  * Function emm and associated methods were deleted: emm is obsolete (use predict instead) and its performance sub-par.
+  * Rewrite internal function calls for non-invasive export in NAMESPACE
+  
+  * All non-helper functions are explicitly exported for better experience of tab completion and GUI (e.g., RStudio) info popups
 
 
 Changes in Version 1.1.2 (2021-02-16)

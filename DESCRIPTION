@@ -1,6 +1,6 @@
 Package: ClusterBootstrap
 Title: Analyze Clustered Data using the Cluster Bootstrap
-Date: 2025-08-04
+Date: 2025-08-18
 Version: 2.0.0
 Authors@R: c(person(given = "Mathijs", family = "Deen",
                     role  = c("aut", "cre"),

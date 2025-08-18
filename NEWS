@@ -1,4 +1,4 @@
-Changes in Version 2.0.0 (2025-08-04)
+Changes in Version 2.0.0 (2025-08-18)
 =====================================
 
   * Maintenance update: changed maintainer email address
@@ -13,9 +13,9 @@ Changes in Version 2.0.0 (2025-08-04)
   
   * All functions up-to-date with R >= 4.0.0, examples require R >= 4.1.0 (base pipe)
   
-  * Update package title, as the package is no longer solely for glms
+  * Fixed warning "cannot xtfrm data frames" for emm
   
-  * Function emm and associated methods were deleted: emm is obsolete (use predict instead) and its performance sub-par. Also, it was incompatible with base::xtfrm() in recent versions of R
+  * Update package title, as the package is no longer solely for glms
   
   * Rewrite internal function calls for non-invasive export in NAMESPACE
   

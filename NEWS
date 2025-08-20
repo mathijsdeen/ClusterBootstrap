@@ -15,9 +15,11 @@ Changes in Version 2.0.0 (2025-08-18)
   
   * Fixed warning "cannot xtfrm data frames" for emm
   
+  * Added general predict function for clusbootglm
+  
   * Update package title, as the package is no longer solely for glms
   
-  * Rewrite internal function calls for non-invasive export in NAMESPACE
+  * Rewrite internal function calls to accomodate non-invasive export in NAMESPACE using exportPattern
   
   * All non-helper functions are explicitly exported for better experience of tab completion and GUI (e.g., RStudio) info popups
 

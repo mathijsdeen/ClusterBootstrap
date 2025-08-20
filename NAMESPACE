@@ -3,7 +3,6 @@
 S3method(coef,clusbootglm)
 S3method(confint,clusbootglm)
 S3method(confint,clusterBootstrap)
-S3method(pairs,clusbootemm)
 S3method(plot,clusbootemm)
 S3method(plot,clusbootptest)
 S3method(predict,clusbootglm)

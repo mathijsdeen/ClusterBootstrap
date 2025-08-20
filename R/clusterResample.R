@@ -37,14 +37,14 @@
 #' }
 #' @author Mathijs Deen
 #' @export
-clusterResample <- function(df, clusters, replace) {
+clusterResample <- function(df, clusters, replace){
   stopifnot(is.data.frame(df),
             length(clusters) == length(replace))
   
   dt_original   <- as.data.table(df)
   dt_resampled  <- copy(dt_original)
   
-  for (level in seq_along(clusters)) {
+  for (level in seq_along(clusters)){
     cl_var     <- clusters[level]
     with_rep   <- replace[level]
     group_vars <- if (level == 1L) character(0) else clusters[seq_len(level - 1L)]
@@ -69,14 +69,14 @@ clusterResample <- function(df, clusters, replace) {
     id_table[[cl_var]]     <- coerce_to_type(id_table[[cl_var]])
     dt_resampled[[cl_var]] <- coerce_to_type(dt_resampled[[cl_var]])
     
-    if (length(group_vars) == 0) {
+    if (length(group_vars) == 0){
       sampled_vec <- sample(id_table[[cl_var]],
                             size = nrow(id_table),
                             replace = with_rep)
       sampled_vec <- coerce_to_type(sampled_vec)
       sampled_ids <- data.table(tmp = sampled_vec)
       setnames(sampled_ids, "tmp", cl_var)
-    } else {
+    } else{
       sampled_ids <- id_table[,
                               {
                                 sampled <- sample(get(cl_var), size = .N, replace = with_rep)
@@ -88,13 +88,11 @@ clusterResample <- function(df, clusters, replace) {
       setnames(sampled_ids, "sampled", cl_var)
     }
     
-    dt_resampled <- merge(
-      x               = sampled_ids,
-      y               = dt_resampled,
-      by              = c(group_vars, cl_var),
-      allow.cartesian = TRUE,
-      sort            = FALSE
-    )
+    dt_resampled <- merge(x               = sampled_ids,
+                          y               = dt_resampled,
+                          by              = c(group_vars, cl_var),
+                          allow.cartesian = TRUE,
+                          sort            = FALSE)
   }
   
   setcolorder(dt_resampled, names(dt_original))

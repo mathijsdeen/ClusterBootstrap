@@ -4,7 +4,7 @@ Date: 2025-08-20
 Version: 2.0.0
 Authors@R: c(person(given = "Mathijs", family = "Deen",
                     role  = c("aut", "cre"),
-                    email = "m.l.deen@fsw.leidenuniv.nl"),
+                    email = "dev@mathijsdeen.com"),
              person(given = "Mark", family = "de Rooij",
                     role = "aut"))
 Description: Provides functionality for the analysis of clustered data using the cluster bootstrap. 

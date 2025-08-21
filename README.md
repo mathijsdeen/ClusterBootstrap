@@ -1,6 +1,8 @@
 # ClusterBootstrap
 
-ClusterBootstrap is an R package that provides functionality for performing (generalized) linear models for the analysis of clustered data. You can download it from github with `devtools`:
+ClusterBootstrap is an R package that provides functionality for using cluster bootstrap sampling (i.e., bootstrap sampling of data with a clustered/nested structure) in your statistical analyses. 
+
+You can download it from github with `devtools`:
 
 ``` r
 #install.packages("devtools")

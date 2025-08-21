@@ -15,7 +15,7 @@
 #' @seealso A useful method for the obtained \code{clusbootptest} class object is \code{\link{plot.clusbootptest}}.
 #' @examples 
 #' \dontrun{
-#' medication <- medication[medication$time %% 1 == 0,]
+#' meds <- medication[medication$time %% 1 == 0,]
 #' set.seed(1)
 #' permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat, 
 #'                     at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)
@@ -23,8 +23,6 @@
 #' @author Mathijs Deen, Mark de Rooij
 #' @import parallel
 #' @import utils
-#' @importFrom dplyr filter
-#' @importFrom magrittr %>%
 #' @importFrom stats t.test
 #' @export
 ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000, progress.bar=TRUE){
@@ -38,14 +36,12 @@ ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000
   wn <- length(at_w)
   ts <- matrix(NA, nrow=wn, ncol=pn)
   if(progress.bar){
-    printpbmsg(pn, arguments, at_w)
+    .printpbmsg(pn, arguments, at_w)
     pb <- txtProgressBar(0, pn*length(at_w), style=3)
     c <- 0
   }
   for(i in 1:wn){
-    pset <- d %>%
-      dplyr::filter(b %in% at_b) %>%
-      dplyr::filter(w == at_w[i])
+    pset <- d[d$b %in% at_b & d$w == at_w[i], ]
     ts[i,1] <- t.test(y~b,pset)$statistic
     for(p in 2:pn){
       ts[i,p] <- t.test(formula = sample(y)~b, data = pset, alternative="two.sided")$statistic
@@ -61,55 +57,4 @@ ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000
   out <- list(perm.statistics=ts,pvalues=pvalues)
   class(out) <- "clusbootptest"
   return(out)
-}
-
-#' @title Plot results of a permutation test
-#' @description Plot results of a permutation test performed with ptest
-#' @param x object of class \code{clusbootptest}
-#' @param pcol color of vertical line indicating the observed Welch t test statistic
-#' @param pty type of vertical line indicating the observed Welch t test statistic
-#' @param mfrow vector of length 2 indicating the numbers of rows and columns in which the histograms will be drawn on the device.
-#' @param ... other arguments to be passed into the \code{hist} function.
-#' @examples 
-#' \dontrun{
-#' medication <- medication[medication$time %% 1 == 0,]
-#' set.seed(1)
-#' permtest.1 <- ptest(data = meds, outcome = pos, within = time, between = treat, 
-#'                     at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)
-#' plot(permtest.1, pcol = "red", pty=2, mfrow = c(2,2), breaks="FD")}
-#' @author Mathijs Deen, Mark de Rooij
-#' @importFrom graphics abline hist par
-#' @export
-plot.clusbootptest <- function(x, pcol="red", pty=1, mfrow=c(1,1), ...){
-  object <- x
-  vals <- object$perm.statistics
-  pvals <- object$pvalues$p
-  nplots <- length(pvals)
-  oldmfrow <- par()$mfrow
-  par(mfrow=mfrow)
-  for(i in 1:nplots){
-    hist(vals[i,], 
-         main=sprintf("Permutation distribution at %s = %s \n (p = %s)",
-                      names(object$pvalues)[1], 
-                      prettyNum(object$pvalues[i,1],digits=3), 
-                      substr(object$pvalues[i,2], 2, min(5,nchar(as.character(object$pvalues[i,2]))))), 
-         xlab="Welch t-statistic",
-         ...)
-    abline(v=vals[i,1], col=pcol, lty=pty)
-  }
-  par(mfrow=oldmfrow)
-}
-
-printpbmsg <- function(pn, arguments, at_w){
-  cat(sprintf("Performing %d permutation tests for %s %s", 
-              pn, 
-              as.character(arguments$within), 
-              ifelse(length(at_w)>1,"values","value")),
-      sprintf("%s",
-              ifelse(length(at_w)>1,
-                     paste0(prettyNum(at_w,digits=3),
-                            sep=c(rep(", ",length(at_w)-2), " and ",""),
-                            collapse=""),
-                     prettyNum(at_w,digits=3))),
-      sprintf("\n"))
 }

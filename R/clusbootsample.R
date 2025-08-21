@@ -10,7 +10,7 @@
 #' @export
 clusbootsample <- function(object, samplenr){
   objname <- match.call()$object
-  if(!class(object)=="clusbootglm"){
+  if(!inherits(object, "clusbootglm")){
     options(error=NULL)
     stop(paste("'",objname,"' is not a clusbootglm class object", sep=""), call.=F)
   }

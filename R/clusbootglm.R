@@ -36,9 +36,11 @@
 clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint.level=.95, n.cores=1){
   #checks
   tt_cores <- detectCores()
+  if(is.na(tt_cores)) tt_cores <- 1   # sometimes (e.g. with webR) detectCores() returns NA
   if(n.cores>tt_cores) {
-    message(sprintf("Note: \"n.cores\" was set to %d, but only %d are available. Using all cores.",n.cores,tt_cores))
+    message(sprintf("Note: n.cores was set to %d, but only %d are available. Using all cores.",n.cores,tt_cores))
   }
+  if(!(n.cores > 0 & n.cores %% 1 == 0)) stop(paste0("n.cores must be non-fractional between 1 and ", tt_cores), call. = FALSE)
   #setup
   model <- as.formula(model)
   res.or <- glm(model,family=family, data = data)
@@ -64,22 +66,23 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
         j <- f[,i]
         obs <- unlist(Obsno[j])
         bootcoef <- tryCatch(coef(glm(model, family = family, data = data[obs,])), 
-                             warning=function(x) rep(as.numeric(NA),p))
+                             warning=function(x) rep(as.numeric(NA),p),
+                             error=function(x) rep(as.numeric(NA),p))
         coefs[i,which(names(res.or$coef) %in% names(bootcoef))] <- bootcoef
       }
     }
     #parallel:
     if(n.cores>1){
-      cl <- makeCluster(max(min(n.cores,tt_cores,2))) 
+      cl <- makeCluster(max(min(n.cores,tt_cores,2)))
+      on.exit(stopCluster(cl), add = TRUE)
       previous_RNGkind <- RNGkind()[1]
       RNGkind("L'Ecuyer-CMRG")
+      on.exit(RNGkind(previous_RNGkind), add = TRUE)
       nextRNGStream(.Random.seed)
-      clusterExport(cl,varlist=c("f","Obsno","model","family","data","p","res.or","clusbootglm_sample_glm"),envir=environment())
+      clusterExport(cl,varlist=c("f","Obsno","model","family","data","p","res.or",".clusbootglm_sample_glm"),envir=environment())
       splitclusters <- 1:B
-      out <- parSapplyLB(cl,splitclusters,function(x) clusbootglm_sample_glm(f, x, Obsno, model, family, data, p, res.or))
+      out <- parSapplyLB(cl,splitclusters,function(x) .clusbootglm_sample_glm(f, x, Obsno, model, family, data, p, res.or))
       coefs <- t(out)
-      stopCluster(cl)
-      RNGkind(previous_RNGkind)
     }
   }
   #post processing
@@ -88,9 +91,9 @@ clusbootglm <- function(model, data, clusterid, family=gaussian, B=5000, confint
   samples.with.NA.coef <- which(is.na(rowSums(coefs)))
   sdcoefs <- apply(coefs, 2, sd, na.rm = TRUE)
   #confidence intervals:
-  ci_percentile <- confint_percentile(coefs, confint.pboundaries)
-  ci_parametric <- confint_parametric(sdcoefs, res.or$coef, confint.Zboundaries)
-  ci_BCa <- confint_BCa(B, invalid.samples, model, data, clusterid, family, coefs, res.or$coef, p, confint.Zboundaries)
+  ci_percentile <- .confint_percentile(coefs, confint.pboundaries)
+  ci_parametric <- .confint_parametric(sdcoefs, res.or$coef, confint.Zboundaries)
+  ci_BCa <- .confint_BCa(B, invalid.samples, model, data, clusterid, family, coefs, res.or$coef, p, confint.Zboundaries)
   #results:
   rownames(ci_percentile) <- rownames(ci_BCa) <- dimnames(ci_parametric)[[1]]
   colnames(ci_parametric) <- colnames(ci_BCa) <- dimnames(ci_percentile)[[2]]

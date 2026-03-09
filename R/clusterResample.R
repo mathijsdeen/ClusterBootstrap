@@ -37,12 +37,18 @@
 #' }
 #' @author Mathijs Deen
 #' @export
-clusterResample <- function(df, clusters, replace){
+clusterResample <- function(df, clusters, replace, keep_indices = FALSE){
   stopifnot(is.data.frame(df),
             length(clusters) == length(replace))
   
-  dt_original   <- as.data.table(df)
-  dt_resampled  <- copy(dt_original)
+  # Generate a tag name that doesn't conflict with existing columns
+  tag_idx <- ".row_index"
+  while (tag_idx %in% names(df)) tag_idx <- paste0(tag_idx, "_")
+  
+  dt_original  <- as.data.table(df)
+  dt_resampled <- copy(dt_original)
+  
+  dt_resampled[, (tag_idx) := .I]
   
   for (level in seq_along(clusters)){
     cl_var     <- clusters[level]
@@ -61,22 +67,17 @@ clusterResample <- function(df, clusters, replace){
                              stop("Unsupported class for cluster variable: ", original_class)
     )
     
-    # Ensure that the data types of the cluster variable match exactly in both tables before merging.
-    # This prevents data.table errors such as:
-    # - "Column X of result for group Y is type 'integer' but expecting type 'double'" (during `by =`)
-    # - "Incompatible join types: x.var (factor) and i.var (integer)" (during `merge()`)
-    # To avoid these issues, we explicitly coerce both `sampled_ids` and `dt_resampled` to the original type of the cluster variable.
     id_table[[cl_var]]     <- coerce_to_type(id_table[[cl_var]])
     dt_resampled[[cl_var]] <- coerce_to_type(dt_resampled[[cl_var]])
     
     if (length(group_vars) == 0){
       sampled_vec <- sample(id_table[[cl_var]],
-                            size = nrow(id_table),
+                            size    = nrow(id_table),
                             replace = with_rep)
       sampled_vec <- coerce_to_type(sampled_vec)
       sampled_ids <- data.table(tmp = sampled_vec)
       setnames(sampled_ids, "tmp", cl_var)
-    } else{
+    } else {
       sampled_ids <- id_table[,
                               {
                                 sampled <- sample(get(cl_var), size = .N, replace = with_rep)
@@ -95,6 +96,15 @@ clusterResample <- function(df, clusters, replace){
                           sort            = FALSE)
   }
   
-  setcolorder(dt_resampled, names(dt_original))
-  dt_resampled[]
+  setcolorder(dt_resampled, c(names(dt_original), tag_idx))
+  
+  if (keep_indices) {
+    row_indices <- dt_resampled[[tag_idx]]
+    dt_resampled[, (tag_idx) := NULL]
+    list(sample  = as.data.frame(dt_resampled[]),
+         indices = row_indices)
+  } else {
+    dt_resampled[, (tag_idx) := NULL]
+    dt_resampled[]
+  }
 }

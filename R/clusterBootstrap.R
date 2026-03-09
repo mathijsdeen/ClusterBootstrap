@@ -74,42 +74,51 @@
 #' @export
 #' @author Mathijs Deen
 clusterBootstrap <- function(df, clusters, replace,
-                             stat_fun, B = 5000, ...){
+                             stat_fun, B = 5000, oob = FALSE, ...){
   stopifnot(is.data.frame(df),
             length(clusters) == length(replace),
             is.function(stat_fun),
             length(B) == 1L,
             is.numeric(B),
-            B > 0)
+            B > 0,
+            is.logical(oob))
   
-  t0 <- stat_fun(df, ...)
+  t0 <- if (oob) stat_fun(df, df, ...) else stat_fun(df, ...)
   if (!(is.numeric(t0) && is.null(dim(t0)))) {
-    stop("`stat_fun()` must return a numeric vector (not a matrix, array, or data frame).", 
+    stop("`stat_fun()` must return a numeric vector (not a matrix, array, or data frame).",
          call. = FALSE)
   }
   
   one_rep <- function(){
-    boot_sample <- clusterResample(df, clusters, replace)
-    stat_fun(boot_sample, ...)
+    if (oob) {
+      boot        <- clusterResample(df, clusters, replace, keep_indices = TRUE)
+      oob_indices <- setdiff(seq_len(nrow(df)), boot$indices)
+      oob_sample  <- as.data.frame(df[oob_indices, , drop = FALSE])
+      stat_fun(as.data.frame(boot$sample), oob_sample, ...)
+    } else {
+      boot_sample <- as.data.frame(clusterResample(df, clusters, replace))
+      stat_fun(boot_sample, ...)
+    }
   }
   
-  res <- replicate(B, one_rep(), simplify = FALSE)
-  stats_mat <- do.call(rbind, res)
+  res        <- replicate(B, one_rep(), simplify = FALSE)
+  stats_mat  <- do.call(rbind, res)
   
   col_names <- names(t0)
   if (is.null(col_names)){
     col_names <- paste0("stat", seq_along(t0))
   }
   
-  colnames(stats_mat) <- col_names
-  bootstrapEstimates <- as.data.frame(stats_mat)
-  originalEstimates <- as.data.frame(t(t0))
-  bootstrapSE <- apply(bootstrapEstimates, 2, sd, na.rm = TRUE)
-  outlist <- list(call               = match.call(),
-                  args               = as.list(match.call()),
-                  estimates          = list(originalEstimates  = originalEstimates,
-                                            bootstrapEstimates = bootstrapEstimates,
-                                            bootstrapSE        = bootstrapSE))
+  colnames(stats_mat)  <- col_names
+  bootstrapEstimates   <- as.data.frame(stats_mat)
+  originalEstimates    <- as.data.frame(t(t0))
+  bootstrapSE          <- apply(bootstrapEstimates, 2, sd, na.rm = TRUE)
+  
+  outlist <- list(call      = match.call(),
+                  args      = as.list(match.call()),
+                  estimates = list(originalEstimates  = originalEstimates,
+                                   bootstrapEstimates = bootstrapEstimates,
+                                   bootstrapSE        = bootstrapSE))
   class(outlist) <- "clusterBootstrap"
   return(outlist)
 }

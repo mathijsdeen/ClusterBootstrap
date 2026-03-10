@@ -10,9 +10,14 @@
 #'   lowest (innermost) level.
 #' @param replace A logical vector, of the same length as \code{clusters},
 #'   indicating whether to sample with replacement at each level.
+#' @param keep_indices = FALSE indicates whether the indices of the bootstrap 
+#'   sample rows in the original data should be returned
 #'
-#' @return A resampled data.table with the same column structure as \code{df},
-#'   potentially with repeated or dropped rows depending on \code{replace}.
+#' @return A list with two elements: 
+#' \item{sample}{A resampled data.table with the same column structure as \code{df},
+#'   potentially with repeated or dropped rows depending on \code{replace}.}
+#' \item{indices}{The indices for the rows in \code{sample} in \code{df} if 
+#'   \code{keep_indices} is set to TRUE, \code{NULL} otherwise.}
 #'
 #' @details This function supports arbitrary nesting depth, and preserves the
 #' original hierarchical structure during resampling. At each level, sampling
@@ -98,13 +103,8 @@ clusterResample <- function(df, clusters, replace, keep_indices = FALSE){
   
   setcolorder(dt_resampled, c(names(dt_original), tag_idx))
   
-  if (keep_indices) {
-    row_indices <- dt_resampled[[tag_idx]]
-    dt_resampled[, (tag_idx) := NULL]
-    list(sample  = as.data.frame(dt_resampled[]),
-         indices = row_indices)
-  } else {
-    dt_resampled[, (tag_idx) := NULL]
-    dt_resampled[]
-  }
+  result <- list(sample  = as.data.frame(dt_resampled[, !tag_idx, with = FALSE]),
+                 indices = if (keep_indices) dt_resampled[[tag_idx]] else NULL)
+  
+  return(result)
 }

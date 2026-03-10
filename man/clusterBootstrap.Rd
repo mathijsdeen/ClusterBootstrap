@@ -4,7 +4,16 @@
 \alias{clusterBootstrap}
 \title{Cluster Bootstrap}
 \usage{
-clusterBootstrap(df, clusters, replace, stat_fun, B = 5000, ...)
+clusterBootstrap(
+  df,
+  clusters,
+  replace,
+  stat_fun,
+  B = 5000,
+  oob = FALSE,
+  ncores = 1L,
+  ...
+)
 }
 \arguments{
 \item{df}{A data frame. The original dataset.}
@@ -15,21 +24,29 @@ structure of the data, ordered from highest to lowest level.}
 \item{replace}{A logical vector indicating whether sampling should be with
 replacement at each level. Should be of the same length as \code{clusters}.}
 
-\item{stat_fun}{A function that takes a data frame (a bootstrap sample)
+\item{stat_fun}{A function that takes a data frame (a bootstrap sample) and possibly an out-of-bag set,
 and returns a numeric vector of statistics.}
 
 \item{B}{Integer. The number of bootstrap samples to generate.}
 
+\item{oob}{Indicates whether the out-of-bag set should be constructed besides the bootstrap sample. See 
+details below.}
+
+\item{ncores}{number of cores that are used for parallel computing.}
+
 \item{...}{Additional arguments passed to \code{stat_fun}.}
 }
 \value{
-\code{clusterBootstrap} returns an object of class \code{clusterBootstrap}, containing the following elements:
+\code{clusterBootstrap} returns an object of class \code{clusterBootstrap}, containing the 
+following elements:
 \item{call}{The function call}
 \item{args}{Arguments passed to the function}
 \item{estimates}{A list with the following elements:
   \itemize{
-    \item \code{originalEstimates}: a \code{data.frame} with one row, containing the return of \code{stat_fun} on the original data.
-    \item \code{bootstrapEstimates}: a \code{data.frame} with B rows, containing the return of \code{stat_fun} on each of the bootstrap samples.
+    \item \code{originalEstimates}: a \code{data.frame} with one row, 
+    containing the return of \code{stat_fun} on the original data.
+    \item \code{bootstrapEstimates}: a \code{data.frame} with B rows, 
+    containing the return of \code{stat_fun} on each of the bootstrap samples.
     \item \code{bootstrapSE}: the bootstrap standard error(s) for all rows in \code{bootstrapEstimates}. 
   }
 }
@@ -38,6 +55,14 @@ and returns a numeric vector of statistics.}
 Performs bootstrapping on hierarchically structured data
 using clustered or nested resampling at any level of the hierarchy. Allows bootstrapping of arbitrary
 statistics computed from the resampled dataset.
+}
+\details{
+When \code{oob = TRUE}, \code{clusterBootstrap} calls \code{clusterResample} with argument 
+\code{keep_indices = TRUE}. With the indices, the out-of-bag (OOB) sample is determined for the current 
+bootstrap sample. The user defined \code{stat_fun} then takes two \code{data.frame}s: the first one is 
+the bootstrap sample, the second one is the OOB sample. This makes it possible to do calculations on the 
+OOB sample based on anything calculated from the bootstrap sample (e.g., calculate OOB prediction error or 
+.632/.632+ bootstrap prediction error).
 }
 \examples{
 \dontrun{
@@ -85,7 +110,8 @@ clusterBootstrap(df       = demo,
 }
 }
 \seealso{
-\code{\link{clusterResample}} for the underlying resampling mechanism. \code{\link{confint.clusterBootstrap} for cluster bootstrap confidence intervals.}
+\code{\link{clusterResample}} for the underlying resampling mechanism. \code{\link{confint.clusterBootstrap} 
+for cluster bootstrap confidence intervals.}
 }
 \author{
 Mathijs Deen

@@ -21,9 +21,8 @@
 #'                     at.within = c(0,2,4,6), at.between = c(0,1), pn = 2000)
 #' permtest.1$pvalues}
 #' @author Mathijs Deen, Mark de Rooij
-#' @import parallel
-#' @import utils
 #' @importFrom stats t.test
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
 ptest <- function(data, outcome, within, between, at.within, at.between, pn=1000, progress.bar=TRUE){
   arguments <- as.list(match.call())

@@ -1,7 +1,7 @@
 Package: ClusterBootstrap
 Title: Analyze Clustered Data using the Cluster Bootstrap
-Date: 2025-08-21
-Version: 2.0.0
+Date: 2026-03-10
+Version: 2.1.0
 Authors@R: c(person(given = "Mathijs", family = "Deen",
                     role  = c("aut", "cre"),
                     email = "dev@mathijsdeen.com"),
@@ -16,5 +16,5 @@ URL: https://github.com/mathijsdeen/ClusterBootstrap
 BugReports: https://github.com/mathijsdeen/ClusterBootstrap/issues
 Maintainer: Mathijs Deen <dev@mathijsdeen.com>
 LazyData: true
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Encoding: UTF-8

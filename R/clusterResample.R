@@ -10,14 +10,11 @@
 #'   lowest (innermost) level.
 #' @param replace A logical vector, of the same length as \code{clusters},
 #'   indicating whether to sample with replacement at each level.
-#' @param keep_indices = FALSE indicates whether the indices of the bootstrap 
-#'   sample rows in the original data should be returned
 #'
 #' @return A list with two elements: 
 #' \item{sample}{A resampled data.table with the same column structure as \code{df},
 #'   potentially with repeated or dropped rows depending on \code{replace}.}
-#' \item{indices}{The indices for the rows in \code{sample} in \code{df} if 
-#'   \code{keep_indices} is set to TRUE, \code{NULL} otherwise.}
+#' \item{indices}{The indices for the rows in \code{sample} in \code{df}}
 #'
 #' @details This function supports arbitrary nesting depth, and preserves the
 #' original hierarchical structure during resampling. At each level, sampling
@@ -42,7 +39,7 @@
 #' }
 #' @author Mathijs Deen
 #' @export
-clusterResample <- function(df, clusters, replace, keep_indices = FALSE){
+clusterResample <- function(df, clusters, replace){
   stopifnot(is.data.frame(df),
             length(clusters) == length(replace))
   
@@ -69,8 +66,7 @@ clusterResample <- function(df, clusters, replace, keep_indices = FALSE){
                              numeric   = as.numeric,
                              double    = as.numeric,
                              factor    = function(x) factor(x, levels = levels(dt_original[[cl_var]])),
-                             stop("Unsupported class for cluster variable: ", original_class)
-    )
+                             stop("Unsupported class for cluster variable: ", original_class))
     
     id_table[[cl_var]]     <- coerce_to_type(id_table[[cl_var]])
     dt_resampled[[cl_var]] <- coerce_to_type(dt_resampled[[cl_var]])
@@ -89,8 +85,7 @@ clusterResample <- function(df, clusters, replace, keep_indices = FALSE){
                                 sampled <- coerce_to_type(sampled)
                                 .(sampled = sampled)
                               },
-                              by = group_vars
-      ]
+                              by = group_vars]
       setnames(sampled_ids, "sampled", cl_var)
     }
     
@@ -104,7 +99,7 @@ clusterResample <- function(df, clusters, replace, keep_indices = FALSE){
   setcolorder(dt_resampled, c(names(dt_original), tag_idx))
   
   result <- list(sample  = as.data.frame(dt_resampled[, !tag_idx, with = FALSE]),
-                 indices = if (keep_indices) dt_resampled[[tag_idx]] else NULL)
+                 indices = dt_resampled[[tag_idx]])
   
   return(result)
 }

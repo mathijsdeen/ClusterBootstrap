@@ -4,7 +4,7 @@
 \alias{clusterResample}
 \title{Cluster Resampling}
 \usage{
-clusterResample(df, clusters, replace, keep_indices = FALSE)
+clusterResample(df, clusters, replace)
 }
 \arguments{
 \item{df}{A data frame or data table. The original dataset to be resampled.}
@@ -15,16 +15,12 @@ lowest (innermost) level.}
 
 \item{replace}{A logical vector, of the same length as \code{clusters},
 indicating whether to sample with replacement at each level.}
-
-\item{keep_indices}{= FALSE indicates whether the indices of the bootstrap 
-sample rows in the original data should be returned}
 }
 \value{
 A list with two elements: 
 \item{sample}{A resampled data.table with the same column structure as \code{df},
   potentially with repeated or dropped rows depending on \code{replace}.}
-\item{indices}{The indices for the rows in \code{sample} in \code{df} if 
-  \code{keep_indices} is set to TRUE, \code{NULL} otherwise.}
+\item{indices}{The indices for the rows in \code{sample} in \code{df}}
 }
 \description{
 Performs hierarchical (clustered or nested) resampling of a data frame

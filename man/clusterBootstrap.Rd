@@ -11,6 +11,7 @@ clusterBootstrap(
   stat_fun,
   B = 5000,
   oob = FALSE,
+  keepIndices = FALSE,
   ncores = 1L,
   ...
 )
@@ -32,7 +33,10 @@ and returns a numeric vector of statistics.}
 \item{oob}{Indicates whether the out-of-bag set should be constructed besides the bootstrap sample. See 
 details below.}
 
-\item{ncores}{number of cores that are used for parallel computing.}
+\item{keepIndices}{A logical value indicating whether the row numbers from \code{df} for the bootstrap 
+sample should be returned. See Value element \code{indices}.}
+
+\item{ncores}{The number of cores that are used for parallel computing.}
 
 \item{...}{Additional arguments passed to \code{stat_fun}.}
 }
@@ -50,6 +54,8 @@ following elements:
     \item \code{bootstrapSE}: the bootstrap standard error(s) for all rows in \code{bootstrapEstimates}. 
   }
 }
+\item{indices}{If \code{keepIndices=TRUE}, a list of length \code{B} where each element contains the row numbers
+of \code{df} that is in the corresponding bootstrap sample. If \code{keepIndices=FALSE}, this element is \code{NULL}.}
 }
 \description{
 Performs bootstrapping on hierarchically structured data
@@ -57,12 +63,10 @@ using clustered or nested resampling at any level of the hierarchy. Allows boots
 statistics computed from the resampled dataset.
 }
 \details{
-When \code{oob = TRUE}, \code{clusterBootstrap} calls \code{clusterResample} with argument 
-\code{keep_indices = TRUE}. With the indices, the out-of-bag (OOB) sample is determined for the current 
-bootstrap sample. The user defined \code{stat_fun} then takes two \code{data.frame}s: the first one is 
-the bootstrap sample, the second one is the OOB sample. This makes it possible to do calculations on the 
-OOB sample based on anything calculated from the bootstrap sample (e.g., calculate OOB prediction error or 
-.632/.632+ bootstrap prediction error).
+When \code{oob = TRUE}, the out-of-bag (OOB) sample is determined for every bootstrap sample. The user 
+defined \code{stat_fun} then takes two \code{data.frame}s: the first one is the bootstrap sample, the 
+second one is the OOB sample. This makes it possible to do calculations on the OOB sample based on anything 
+calculated from the bootstrap sample (e.g., calculate OOB prediction error).
 }
 \examples{
 \dontrun{

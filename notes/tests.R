@@ -131,24 +131,30 @@ library(dplyr)
 set.seed(42)
 df <- generateData(nSchools  = 10,
                    nClasses  = 5,
-                   nStudents = 20)
+                   nStudents = 20) |>
+  arrange(school,class,student) #|>
+  #slice(1:(n()-3))
 
 # ---- 2. Check the data ------------------------------------------------------
 str(df)
 head(df)
 
 # ---- 3. Run the cluster bootstrap -----------------------------------------
+library(tictoc)
 set.seed(42)
-result <- clusterBootstrap(df         = df,
-                           clusters   = c("school", "class", "student"),
-                           replace    = c(TRUE, TRUE, TRUE),
-                           stat_fun   = oob_mse,
-                           B          = 5000,
-                           oob        = TRUE,
-                           ncores     = 4L,
-                           outcome    = "score1",
-                           predictors = "score2")
-
+tic()
+result <- clusterBootstrap(df          = df,
+                           clusters    = c("school", "class", "student"),
+                           replace     = c(TRUE, TRUE, TRUE),
+                           stat_fun    = oob_mse,
+                           B           = 1000000,
+                           oob         = TRUE,
+                           ncores      = 9L,
+                           keepIndices = TRUE,
+                           outcome     = "score1",
+                           predictors  = "score2")
+toc()
+beepr::beep(5)
 # ---- 4. Inspect the results -------------------------------------------------
 
 # Original (apparent) estimates
@@ -183,3 +189,16 @@ abline(v = bootstrapError(result, oob_stat = "oob_mse")$err_632,
        col = "red", lwd = 2, lty = 2)
 
 par(mfrow = c(1, 1))
+
+inbag(result, 1)
+
+nrows <- rep(0, 100000)
+for(i in seq_len(100000)) nrows[i] <- nrow(oob(result, i))
+
+mean(nrows)
+
+mean(sapply(result$indices, function(idx) {
+  length(setdiff(seq_len(nrow(df)), idx))
+}))
+
+result$

@@ -127,19 +127,15 @@ bootstrapError <- function(boot_obj, oob_stat) {
 
 library(dplyr)
 
-# ---- 1. Generate fake three-level data --------------------------------------
+# 1. Generate fake three-level data 
 set.seed(42)
 df <- generateData(nSchools  = 10,
                    nClasses  = 5,
                    nStudents = 20) |>
   arrange(school,class,student) #|>
-  #slice(1:(n()-3))
+  #slice(1:(n()-3)) #slight imbalance
 
-# ---- 2. Check the data ------------------------------------------------------
-str(df)
-head(df)
-
-# ---- 3. Run the cluster bootstrap -----------------------------------------
+# 2. Run the cluster bootstrap 
 library(tictoc)
 set.seed(42)
 tic()
@@ -155,7 +151,7 @@ result <- clusterBootstrap(df          = df,
                            predictors  = "score2")
 toc()
 beepr::beep(5)
-# ---- 4. Inspect the results -------------------------------------------------
+# 3. Inspect the results 
 
 # Original (apparent) estimates
 result$estimates$originalEstimates
@@ -166,10 +162,10 @@ result$estimates$bootstrapSE
 # Distribution of bootstrap estimates
 summary(result$estimates$bootstrapEstimates)
 
-# ---- 6. Compute prediction error estimates ----------------------------------
+# 4. Compute prediction error estimates 
 bootstrapError(result, oob_stat = "oob_mse")
 
-# ---- 7. Visualise the bootstrap distribution --------------------------------
+# 5. Visualise the bootstrap distribution 
 par(mfrow = c(1, 2))
 
 hist(result$estimates$bootstrapEstimates$inbag_mse,
@@ -192,8 +188,8 @@ par(mfrow = c(1, 1))
 
 inbag(result, 1)
 
-nrows <- rep(0, 100000)
-for(i in seq_len(100000)) nrows[i] <- nrow(oob(result, i))
+nrows <- rep(0, 1000000)
+for(i in seq_len(1000000)) nrows[i] <- nrow(oob(result, i))
 
 mean(nrows)
 
@@ -201,4 +197,77 @@ mean(sapply(result$indices, function(idx) {
   length(setdiff(seq_len(nrow(df)), idx))
 }))
 
-result$
+#### using the opposites data, compare to clusbootglm
+
+library(ClusterBootstrap)
+library(tictoc)
+data("opposites")
+bootFun <- function(data) {
+  lm(SCORE~Time*COG, data=data)$coefficients
+}
+
+mean.old <- mean.new <- sd.old <- sd.new <- matrix(rep(NA, 400), ncol=4)
+
+set.seed(1)
+for(i in seq_len(100)){
+  cbglm <- clusbootglm(SCORE~Time*COG, data=opposites, clusterid=Subject)
+  cb <- clusterBootstrap(df       = opposites, 
+                         clusters = "Subject", 
+                         replace  = TRUE, 
+                         stat_fun = bootFun, 
+                         B        = 5000, 
+                         oob      = FALSE,
+                         ncores   = 8)
+  mean.old[i,] <- cbglm$coefficients |> apply(2, mean)
+  mean.new[i,] <- cb$estimates$bootstrapEstimates |> apply(2, mean)
+  sd.old[i,] <- cbglm$coefficients |> apply(2, sd)
+  sd.new[i,] <- cb$estimates$bootstrapEstimates |> apply(2, sd)
+}
+beepr::beep(5)
+
+mean.old |> apply(2, mean)
+mean.new |> apply(2, mean)
+
+### standard errors, broad comparison
+library(nlme)
+
+SEs <- matrix(rep(NA, 4*7), ncol=4)
+#clusbootglm
+SEs[1,] <- sd.old |> apply(2, mean)
+#clusterBootstrap
+SEs[2,] <- sd.new |> apply(2, mean)
+#well-specified mm
+SEs[3,] <- lme(SCORE~Time*COG,random=~1+Time|Subject,data=opposites) |> summary() |> .Primitive("$")(tTable) |> .Primitive("[")(,2)
+#well-specified gls
+SEs[4,] <- gls(SCORE~Time*COG,correlation = corAR1(form=~1|Subject),weights=varIdent(form=~1|Time),data=opposites) |> summary() |> .Primitive("$")(tTable) |> .Primitive("[")(,2)
+#lm
+SEs[5,] <- lm(SCORE~Time*COG, data=opposites) |> summary() |> coef() |> .Primitive("[")(,2)
+#underspecified mm
+SEs[6,] <- lme(SCORE~Time*COG,random=~1|Subject,data=opposites) |> summary() |> .Primitive("$")(tTable) |> .Primitive("[")(,2)
+#underspecified gls
+SEs[7,] <- gls(SCORE~Time*COG,correlation = corAR1(form=~1|Subject),data=opposites) |> summary() |> .Primitive("$")(tTable) |> .Primitive("[")(,2)
+rownames(SEs) <- c("clusbootglm", "clusterBootstrap", "wellSpecifiedMM",
+                   "wellSpecifiedGLS", "lm", "underSpecifiedMM","underSpecifiedGLS")
+colnames(SEs) <- names(coef(lm(SCORE~Time*COG, data=opposites)))
+SEs
+
+# one last look at OOB size, now for 1 resample level (person level)
+set.seed(1)
+cb <- clusterBootstrap(df          = opposites, 
+                       clusters    = "Subject", 
+                       replace     = TRUE, 
+                       stat_fun    = bootFun, 
+                       B           = 1000000, 
+                       oob         = FALSE,
+                       keepIndices = TRUE,
+                       ncores      = 8)
+
+nrows <- rep(0, 1000000)
+for(i in seq_len(1000000)) nrows[i] <- nrow(oob(cb, i))
+
+mean(nrows) / 144
+
+(1-1/length(unique(opposites$Subject)))^length(unique(opposites$Subject))
+
+#as expected, resembles 1 - .632 (for n = 36). 
+

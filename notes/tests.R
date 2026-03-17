@@ -271,3 +271,22 @@ mean(nrows) / 144
 
 #as expected, resembles 1 - .632 (for n = 36). 
 
+####
+library(ClusterBootstrap)
+
+
+### backward compatibility stats_fun test
+set.seed(1)
+cB.1 <- clusterBootstrap(df = opposites, clusters = "Subject", replace = TRUE, 
+                         statFun = bootFun, B = 5000, oob=FALSE, nCores = 8)
+set.seed(1)
+cB.2 <- clusterBootstrap(df = opposites, clusters = "Subject", replace = TRUE, 
+                         stat_fun = bootFun, B = 5000, oob=FALSE, nCores = 8)
+set.seed(1)
+cB.3 <- clusterBootstrap(opposites, "Subject", TRUE, bootFun, 5000, FALSE, nCores = 8)
+set.seed(1)
+cB.4 <- clusterBootstrap(df = opposites, clusters = "Subject", replace = TRUE, 
+                         B = 5000, oob=FALSE, nCores = 8) #shouldnt work at all
+
+identical(cB.1$estimates$bootstrapEstimates, cB.3$estimates$bootstrapEstimates)
+identical(cB.1$estimates$bootstrapEstimates, cB.2$estimates$bootstrapEstimates)

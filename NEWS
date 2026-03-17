@@ -1,3 +1,15 @@
+Changes in Version 2.1.0 (2026-03-17)
+=====================================
+
+  * clusterBootstrap gains arguments:
+    * nCores to specify number of cores to use for parallel computing
+    * oob to indicate whether an out-of-bag sample should be computed for each bootstrap sample to be passed to stat_fun
+    * keepIndices to indicate whether the indices in the input data.frame should be saved into the return object
+  
+  * clusterBootstrap argument stat_fun got renamed to statFun softly - the old argument will keep working for backward compatibility until a later moment (perhaps version 3.0.0).
+
+  * clusterResample now returns a list containing the bootstrap sample and its indices in the original data.frame
+  
 Changes in Version 2.0.0 (2025-08-18)
 =====================================
 

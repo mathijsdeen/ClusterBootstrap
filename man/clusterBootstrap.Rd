@@ -8,11 +8,11 @@ clusterBootstrap(
   df,
   clusters,
   replace,
-  stat_fun,
+  statFun = NULL,
   B = 5000,
   oob = FALSE,
   keepIndices = FALSE,
-  ncores = 1L,
+  nCores = 1L,
   ...
 )
 }
@@ -25,7 +25,7 @@ structure of the data, ordered from highest to lowest level.}
 \item{replace}{A logical vector indicating whether sampling should be with
 replacement at each level. Should be of the same length as \code{clusters}.}
 
-\item{stat_fun}{A function that takes a data frame (a bootstrap sample) and possibly an out-of-bag set,
+\item{statFun}{A function that takes a data frame (a bootstrap sample) and possibly an out-of-bag set,
 and returns a numeric vector of statistics.}
 
 \item{B}{Integer. The number of bootstrap samples to generate.}
@@ -36,9 +36,9 @@ details below.}
 \item{keepIndices}{A logical value indicating whether the row numbers from \code{df} for the bootstrap 
 sample should be returned. See Value element \code{indices}.}
 
-\item{ncores}{The number of cores that are used for parallel computing.}
+\item{nCores}{The number of cores that are used for parallel computing.}
 
-\item{...}{Additional arguments passed to \code{stat_fun}.}
+\item{...}{Additional arguments passed to \code{statFun}.}
 }
 \value{
 \code{clusterBootstrap} returns an object of class \code{clusterBootstrap}, containing the 
@@ -48,9 +48,9 @@ following elements:
 \item{estimates}{A list with the following elements:
   \itemize{
     \item \code{originalEstimates}: a \code{data.frame} with one row, 
-    containing the return of \code{stat_fun} on the original data.
+    containing the return of \code{statFun} on the original data.
     \item \code{bootstrapEstimates}: a \code{data.frame} with B rows, 
-    containing the return of \code{stat_fun} on each of the bootstrap samples.
+    containing the return of \code{statFun} on each of the bootstrap samples.
     \item \code{bootstrapSE}: the bootstrap standard error(s) for all rows in \code{bootstrapEstimates}. 
   }
 }
@@ -64,9 +64,13 @@ statistics computed from the resampled dataset.
 }
 \details{
 When \code{oob = TRUE}, the out-of-bag (OOB) sample is determined for every bootstrap sample. The user 
-defined \code{stat_fun} then takes two \code{data.frame}s: the first one is the bootstrap sample, the 
+defined \code{statFun} then takes two \code{data.frame}s: the first one is the bootstrap sample, the 
 second one is the OOB sample. This makes it possible to do calculations on the OOB sample based on anything 
 calculated from the bootstrap sample (e.g., calculate OOB prediction error).
+}
+\note{
+The argument \code{stat_fun} got renamed softly to \code{statFun} in \code{ClusterBootstrap 2.1.0}. 
+The old argument still works but will be fully deprecated in the future.
 }
 \examples{
 \dontrun{
@@ -79,14 +83,14 @@ bootFun <- function(d) lm(pos ~ treat*time, data = d)$coefficients
 clusterBootstrap(df       = medData, 
                  clusters = "id", 
                  replace  = TRUE, 
-                 stat_fun = bootFun, 
+                 statFun  = bootFun, 
                  B        = 5000)
 
 # Resampling on the person level and the repeated measures level
 clusterBootstrap(df       = medData, 
                  clusters = c("id", "time"), 
                  replace  = c(TRUE, TRUE), 
-                 stat_fun = bootFun, 
+                 statFun  = bootFun, 
                  B        = 5000)
 
 # Not resampling at one level 
@@ -109,7 +113,7 @@ bootFun2 <- function(d) lm(score1 ~ score2, data = d)$coef
 clusterBootstrap(df       = demo, 
                  clusters = c("school", "class", "student"),
                  replace  = c(TRUE, FALSE, TRUE),
-                 stat_fun = bootFun2,
+                 statFun  = bootFun2,
                  B        = 1000)
 }
 }

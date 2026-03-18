@@ -10,7 +10,6 @@ clusterBootstrap(
   replace,
   statFun = NULL,
   B = 5000,
-  oob = FALSE,
   keepIndices = FALSE,
   nCores = 1L,
   ...
@@ -25,13 +24,10 @@ structure of the data, ordered from highest to lowest level.}
 \item{replace}{A logical vector indicating whether sampling should be with
 replacement at each level. Should be of the same length as \code{clusters}.}
 
-\item{statFun}{A function that takes a data frame (a bootstrap sample) and possibly an out-of-bag set,
-and returns a numeric vector of statistics.}
+\item{statFun}{A function that takes a data frame (a bootstrap sample) and returns a numeric vector 
+of statistics.}
 
 \item{B}{Integer. The number of bootstrap samples to generate.}
-
-\item{oob}{Indicates whether the out-of-bag set should be constructed besides the bootstrap sample. See 
-details below.}
 
 \item{keepIndices}{A logical value indicating whether the row numbers from \code{df} for the bootstrap 
 sample should be returned. See Value element \code{indices}.}
@@ -63,10 +59,9 @@ using clustered or nested resampling at any level of the hierarchy. Allows boots
 statistics computed from the resampled dataset.
 }
 \details{
-When \code{oob = TRUE}, the out-of-bag (OOB) sample is determined for every bootstrap sample. The user 
-defined \code{statFun} then takes two \code{data.frame}s: the first one is the bootstrap sample, the 
-second one is the OOB sample. This makes it possible to do calculations on the OOB sample based on anything 
-calculated from the bootstrap sample (e.g., calculate OOB prediction error).
+If out-of-bag (OOB) statistics (e.g., prediction error) are of interest, set 
+\code{keepIndices = TRUE}. The resulting indices can be used post hoc with the \code{\link{inbag}} and 
+\code{\link{oob}} methods to extract the bootstrap and OOB samples for any given iteration.
 }
 \note{
 The argument \code{stat_fun} got renamed softly to \code{statFun} in \code{ClusterBootstrap 2.1.0}. 
@@ -93,7 +88,7 @@ clusterBootstrap(df       = medData,
                  statFun  = bootFun, 
                  B        = 5000)
 
-# Not resampling at one level 
+Resampling at multiple levels 
 # (e.g., by design all classes in a probed school are included, 
 # but not all students in a class)
 set.seed(2025)
@@ -118,8 +113,9 @@ clusterBootstrap(df       = demo,
 }
 }
 \seealso{
-\code{\link{clusterResample}} for the underlying resampling mechanism. \code{\link{confint.clusterBootstrap} 
-for cluster bootstrap confidence intervals.}
+\code{\link{clusterResample}} for the underlying resampling mechanism. 
+\code{\link{confint.clusterBootstrap}} for cluster bootstrap confidence intervals.
+\code{\link{inbag}} and \code{\link{oob}} for extracting bootstrap and out-of-bag samples.
 }
 \author{
 Mathijs Deen

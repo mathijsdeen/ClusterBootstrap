@@ -9,13 +9,11 @@
 #'   structure of the data, ordered from highest to lowest level.
 #' @param replace A logical vector indicating whether sampling should be with
 #'   replacement at each level. Should be of the same length as \code{clusters}.
-#' @param statFun A function that takes a data frame (a bootstrap sample) and possibly an out-of-bag set,
-#'   and returns a numeric vector of statistics.
+#' @param statFun A function that takes a data frame (a bootstrap sample) and returns a numeric vector 
+#'   of statistics.
 #' @param B Integer. The number of bootstrap samples to generate.
-#' @param oob Indicates whether the out-of-bag set should be constructed besides the bootstrap sample. See 
-#' details below.
 #' @param keepIndices A logical value indicating whether the row numbers from \code{df} for the bootstrap 
-#' sample should be returned. See Value element \code{indices}.
+#'   sample should be returned. See Value element \code{indices}.
 #' @param nCores The number of cores that are used for parallel computing.
 #' @param ... Additional arguments passed to \code{statFun}.
 #'
@@ -36,13 +34,13 @@
 #' of \code{df} that is in the corresponding bootstrap sample. If \code{keepIndices=FALSE}, this element is \code{NULL}.}
 #' 
 #' @details
-#' When \code{oob = TRUE}, the out-of-bag (OOB) sample is determined for every bootstrap sample. The user 
-#' defined \code{statFun} then takes two \code{data.frame}s: the first one is the bootstrap sample, the 
-#' second one is the OOB sample. This makes it possible to do calculations on the OOB sample based on anything 
-#' calculated from the bootstrap sample (e.g., calculate OOB prediction error).
+#' If out-of-bag (OOB) statistics (e.g., prediction error) are of interest, set 
+#' \code{keepIndices = TRUE}. The resulting indices can be used post hoc with the \code{\link{inbag}} and 
+#' \code{\link{oob}} methods to extract the bootstrap and OOB samples for any given iteration.
 #'  
-#' @seealso \code{\link{clusterResample}} for the underlying resampling mechanism. \code{\link{confint.clusterBootstrap} 
-#' for cluster bootstrap confidence intervals.}
+#' @seealso \code{\link{clusterResample}} for the underlying resampling mechanism. 
+#' \code{\link{confint.clusterBootstrap}} for cluster bootstrap confidence intervals.
+#' \code{\link{inbag}} and \code{\link{oob}} for extracting bootstrap and out-of-bag samples.
 #' 
 #' @note The argument \code{stat_fun} got renamed softly to \code{statFun} in \code{ClusterBootstrap 2.1.0}. 
 #' The old argument still works but will be fully deprecated in the future.
@@ -67,7 +65,7 @@
 #'                  statFun  = bootFun, 
 #'                  B        = 5000)
 #' 
-#' # Not resampling at one level 
+#' Resampling at multiple levels 
 #' # (e.g., by design all classes in a probed school are included, 
 #' # but not all students in a class)
 #' set.seed(2025)
@@ -99,23 +97,24 @@ clusterBootstrap <- function(df,
                              replace,
                              statFun     = NULL, 
                              B           = 5000, 
-                             oob         = FALSE, 
                              keepIndices = FALSE,
                              nCores      = 1L, 
                              ...){
   dots <- list(...)
   if (!is.null(dots$stat_fun) && is.null(statFun)) { 
     warning("Argument `stat_fun` is deprecated, please use `statFun` instead.", call. = FALSE)
-    statFun <- dots$stat_fun # backward compatibility
+    statFun <- dots$stat_fun
     dots$stat_fun <- NULL
   }
   if (is.null(statFun)) stop("Argument `statFun` is missing with no default.", call. = FALSE)
+  stopifnot(is.data.frame(df),
+            length(clusters) == length(replace),
+            is.function(statFun), 
+            length(B) == 1L,
+            is.numeric(B),
+            B > 0,
+            is.logical(keepIndices))
   
-  stopifnot(is.data.frame(df),    length(clusters) == length(replace), is.function(statFun), 
-            length(B) == 1L,      is.numeric(B),                       B > 0,
-            is.logical(oob),      is.logical(keepIndices))
-  
-  #nCores check
   tt_cores <- detectCores()
   if (is.na(tt_cores)) tt_cores <- 1L
   if (nCores > tt_cores) {
@@ -126,28 +125,18 @@ clusterBootstrap <- function(df,
     stop(paste0("nCores must be a non-fractional number between 1 and ", tt_cores), call. = FALSE)
   }
   
-  #run statFun on original data
-  t0 <- if(oob) do.call(statFun, c(list(df, df), dots)) else do.call(statFun, c(list(df), dots))
+  t0 <- do.call(statFun, c(list(df), dots))
   if(!(is.numeric(t0) && is.null(dim(t0)))){
     stop("`statFun()` must return a numeric vector (not a matrix, array, or data frame).",
          call. = FALSE)
   }
   
-  #clusterResample, possibly create OOB set, run statFun and collect output; definition.
   one_rep <- function(){
-    boot        <- clusterResample(df, clusters, replace)
-    if(oob){
-      oob_indices <- setdiff(seq_len(nrow(df)), boot$indices)
-      oob_sample  <- df[oob_indices, , drop = FALSE]
-      stat        <- do.call(statFun, c(list(boot$sample, oob_sample), dots))
-    } else{
-      stat        <- do.call(statFun, c(list(boot$sample), dots))
-    }
-    list(stat    = stat,
+    boot <- clusterResample(df, clusters, replace)
+    list(stat    = do.call(statFun, c(list(boot$sample), dots)),
          indices = boot$indices)
   }
   
-  #run one_rep repeatedly, serially or in parallel
   if(nCores == 1L){
     res <- replicate(B, one_rep(), simplify = FALSE)
   } else{
@@ -156,13 +145,12 @@ clusterBootstrap <- function(df,
     clusterSetRNGStream(cl, iseed = sample.int(.Machine$integer.max, 1L))
     clusterExport(cl, 
                   varlist = c("one_rep", "df", "clusters", "replace",
-                              "statFun", "oob", "clusterResample", "dots"),
+                              "statFun", "clusterResample", "dots"),
                   envir   = environment())
     clusterEvalQ(cl, library(data.table))
     res <- parLapply(cl, seq_len(B), function(i) one_rep())
   }
   
-  #put the results together
   stats_mat <- do.call(rbind, lapply(res, `[[`, "stat"))
   col_names <- names(t0)
   if (is.null(col_names)){
@@ -170,7 +158,6 @@ clusterBootstrap <- function(df,
   }
   colnames(stats_mat)  <- col_names
   
-  #create output
   bootstrapEstimates   <- as.data.frame(stats_mat)
   originalEstimates    <- as.data.frame(t(t0))
   bootstrapSE          <- apply(bootstrapEstimates, 2, sd, na.rm = TRUE)

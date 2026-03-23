@@ -15,6 +15,12 @@
 #' @param keepIndices A logical value indicating whether the row numbers from \code{df} for the bootstrap 
 #'   sample should be returned. See Value element \code{indices}.
 #' @param nCores The number of cores that are used for parallel computing.
+#' @param clusterExports A named list of objects and packages to export to 
+#'   worker nodes when using parallel computing (\code{nCores > 1}). 
+#'   Character elements are treated as package names and loaded via 
+#'   \code{library()} on each worker. Non-character elements are treated as 
+#'   objects and exported via \code{clusterExport()}. Ignored when 
+#'   \code{nCores = 1}. 
 #' @param ... Additional arguments passed to \code{statFun}.
 #'
 #' @return \code{clusterBootstrap} returns an object of class \code{clusterBootstrap}, containing the 
@@ -89,22 +95,26 @@
 #'                  B        = 1000)
 #' }
 #' @exportPattern "^[^\\.]"
-#' @importFrom parallel makeCluster stopCluster clusterSetRNGStream clusterExport clusterEvalQ parLapply detectCores
+#' @importFrom parallel makeCluster stopCluster clusterSetRNGStream clusterExport clusterEvalQ parLapply detectCores clusterCall
 #' @export
 #' @author Mathijs Deen
 clusterBootstrap <- function(df, 
                              clusters, 
                              replace,
-                             statFun     = NULL, 
-                             B           = 5000, 
-                             keepIndices = FALSE,
-                             nCores      = 1L, 
+                             statFun        = NULL, 
+                             B              = 5000, 
+                             keepIndices    = FALSE,
+                             nCores         = 1L, 
+                             clusterExports = list(),
                              ...){
   dots <- list(...)
   if (!is.null(dots$stat_fun) && is.null(statFun)) { 
     warning("Argument `stat_fun` is deprecated, please use `statFun` instead.", call. = FALSE)
     statFun <- dots$stat_fun
     dots$stat_fun <- NULL
+  }
+  if (length(clusterExports) > 0 && is.null(names(clusterExports))) {
+    stop("`clusterExports` must be a named list.", call. = FALSE)
   }
   if (is.null(statFun)) stop("Argument `statFun` is missing with no default.", call. = FALSE)
   stopifnot(is.data.frame(df),
@@ -143,11 +153,28 @@ clusterBootstrap <- function(df,
     cl <- makeCluster(nCores)
     on.exit(stopCluster(cl))
     clusterSetRNGStream(cl, iseed = sample.int(.Machine$integer.max, 1L))
+    
+    # exports for clusterBootstrap
     clusterExport(cl, 
                   varlist = c("one_rep", "df", "clusters", "replace",
                               "statFun", "clusterResample", "dots"),
                   envir   = environment())
     clusterEvalQ(cl, library(data.table))
+    
+    # exports defined by user
+    if (length(clusterExports) > 0) {
+      pkg_mask <- sapply(clusterExports, is.character)
+      obj_mask <- !pkg_mask
+      if (any(obj_mask)) {
+        list2env(clusterExports[obj_mask], envir = environment())
+        clusterExport(cl, varlist = names(clusterExports)[obj_mask], envir = environment())
+      }
+      if (any(pkg_mask)) {
+        clusterCall(cl, function(p) lapply(p, library, character.only = TRUE), 
+                    unlist(clusterExports[pkg_mask]))
+      }
+    }
+    
     res <- parLapply(cl, seq_len(B), function(i) one_rep())
   }
   

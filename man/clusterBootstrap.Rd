@@ -12,6 +12,7 @@ clusterBootstrap(
   B = 5000,
   keepIndices = FALSE,
   nCores = 1L,
+  clusterExports = list(),
   ...
 )
 }
@@ -33,6 +34,13 @@ of statistics.}
 sample should be returned. See Value element \code{indices}.}
 
 \item{nCores}{The number of cores that are used for parallel computing.}
+
+\item{clusterExports}{A named list of objects and packages to export to 
+worker nodes when using parallel computing (\code{nCores > 1}). 
+Character elements are treated as package names and loaded via 
+\code{library()} on each worker. Non-character elements are treated as 
+objects and exported via \code{clusterExport()}. Ignored when 
+\code{nCores = 1}.}
 
 \item{...}{Additional arguments passed to \code{statFun}.}
 }
